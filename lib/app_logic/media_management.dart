@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:just_audio/just_audio.dart'; // audio handling
-import 'package:video_player/video_player.dart'; // video handling
 import 'package:media_scanner/media_scanner.dart'; // for scanning media
 
 final AudioPlayer audioPlayer = AudioPlayer();
@@ -109,3 +108,5 @@ Future<void> playAudio(String path) async {
 //     ),
 //   );
 // }
+
+void mediaPlaybackAction(String action){}
