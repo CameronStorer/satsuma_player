@@ -28,11 +28,11 @@ class _SongsTabState extends State<SongsTab> {
         appBar: AppBar(
           toolbarHeight: 0,
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(46),
+            preferredSize: const Size.fromHeight(70),
             child: Column(
               children: <Widget>[
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     // title
                     Column(
@@ -51,16 +51,12 @@ class _SongsTabState extends State<SongsTab> {
                       ],
                     ),
                     // buttons
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 30),
-                      child: TabBar(
-                        // padding: const EdgeInsets.symmetric(horizontal: 2),
-                        tabs: [
-                          Tab(icon: Icon(Icons.search), text: 'Search'),
-                          Tab(icon: Icon(Icons.sort), text: 'Sort By'),
-                          Tab(icon: Icon(Icons.loop), text: 'Rescan'),
-                        ],
-                      ),
+                    Row(
+                      // padding: const EdgeInsets.symmetric(horizontal: 2),
+                      children: [
+                        TextButton(onPressed: () {}, child: Column(children: [Icon(Icons.search), Text('Search') ]),),
+                        TextButton(onPressed: () {}, child: Column(children: [Icon(Icons.sort), Text('Sort By' )]),),
+                      ],
                     ),
                   ],
                 ),

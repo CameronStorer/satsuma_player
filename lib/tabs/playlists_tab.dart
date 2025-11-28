@@ -31,13 +31,19 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
       // Column is used for the title shown above the grid (of playlists)
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        // page title
-        const Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            'Your Playlists',
-            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-          ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // page title
+            const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Your Playlists',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+            ),
+            IconButton(onPressed: () {}, padding: EdgeInsets.all(15), icon: Icon(Icons.add_circle)),
+          ],
         ),
         // --- build the playlist grid ---
         Expanded(

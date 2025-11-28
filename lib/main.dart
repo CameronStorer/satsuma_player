@@ -19,8 +19,33 @@ class SatsumaPlayer extends StatelessWidget {
   // build UI
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       title: 'Satsuma Player',
+
+      // 1. Define light theme (default theme)
+      theme: ThemeData(
+        // light brightness
+        brightness: Brightness.light,
+        useMaterial3: true,
+        // Custom light colors
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepOrange,
+          brightness: Brightness.light,
+        ),
+      ),
+
+      // 2. Define dark theme
+      darkTheme: ThemeData(
+        // dark brightness
+        brightness: Brightness.dark,
+        useMaterial3: true,
+        // Custom dark colors
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.deepOrange,
+          brightness: Brightness.dark,
+        ),
+      ),
+
       home: CustomTabController(),
     );
   }
@@ -31,17 +56,6 @@ class CustomTabController extends StatelessWidget {
   //constructor
   const CustomTabController({super.key});
 
-  // tab widget for tab-click-actions
-  Widget _buildCommandTab(BuildContext context, IconData icon, String action) {
-    return InkWell(
-      // 💡 Key step: Use onTap to execute your command
-      onTap: () => mediaPlaybackAction(action),
-      // Set the splash color for visual feedback
-      splashColor: Colors.blue.shade100,
-      child: Tab(icon: Icon(icon)),
-    );
-  }
-
   // build UI
   @override
   Widget build(BuildContext context) {
@@ -50,6 +64,7 @@ class CustomTabController extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 0,
+          backgroundColor: const Color.fromARGB(255, 228, 143, 6),
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Playlists', icon: Icon(Icons.list)),
@@ -65,12 +80,51 @@ class CustomTabController extends StatelessWidget {
           children: [PlaylistsTab(), SongsTab(), DownloadTab(), SettingsTab()],
         ),
 
-        bottomNavigationBar: TabBar(
-          tabs: <Widget>[
-            _buildCommandTab(context, Icons.fast_rewind_rounded, 'reverse'),
-            _buildCommandTab(context, Icons.pause, 'pause'),
-            _buildCommandTab(context, Icons.fast_forward_rounded, 'forward'),
-          ],
+        // bottom button bar
+        bottomNavigationBar: Container(color: Color.fromARGB(255, 228, 143, 6),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.shuffle),
+                iconSize: 18,
+                padding: EdgeInsets.all(25),
+                constraints: const BoxConstraints(),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.fast_rewind_rounded),
+                iconSize: 40,
+                padding: EdgeInsets.all(20),
+                constraints: const BoxConstraints(),
+              ),
+              IconButton(
+                onPressed: () {
+                  mediaPlaybackAction("Pause");
+                },
+                icon: const Icon(Icons.pause_rounded),
+                iconSize: 40,
+                padding: EdgeInsets.all(20),
+                constraints: const BoxConstraints(),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.fast_forward_rounded),
+                iconSize: 40,
+                padding: EdgeInsets.all(20),
+                constraints: const BoxConstraints(),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.loop),
+                iconSize: 18,
+                padding: EdgeInsets.all(25),
+                constraints: const BoxConstraints(),
+              ),
+            ],
+          ),
         ),
       ),
     );

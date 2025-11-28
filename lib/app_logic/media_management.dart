@@ -77,18 +77,14 @@ Future<List<File>> scanForMedia() async {
 // function to play media when selected in the app
 void playMedia(File file) {
   final ext = path.extension(file.path).toLowerCase();
-
-  if (ext == '.mp3' || ext == '.wav') {
+  if (ext == '.mp3' || ext == '.wav' || ext == '.m4a') {
     playAudio(file.path);
-    // } else if (ext == '.mp4') {
-    //   playVideo(file.path);
   } else {
     print("Unsupported file type: $ext");
   }
 }
 
 // helper method to play audio files
-
 Future<void> playAudio(String path) async {
   try {
     await audioPlayer.setFilePath(path);
@@ -98,15 +94,15 @@ Future<void> playAudio(String path) async {
   }
 }
 
-
-// // helper method to play video files 
-// void playVideo(String path) {
-//   Navigator.push(
-//     context,
-//     MaterialPageRoute(
-//       builder: (context) => VideoPlayerPage(path: path),
-//     ),
-//   );
-// }
-
-void mediaPlaybackAction(String action){}
+// function to handle media playback
+void mediaPlaybackAction(String action) {
+  if (action == "Pause") {
+    if (audioPlayer.playing == true) {
+      audioPlayer.pause();
+    } else {
+      audioPlayer.play();
+    }
+  } //else if (action == "skip"){
+  //   audioPlayer.skip
+  // }
+}
