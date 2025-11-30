@@ -96,7 +96,7 @@ Future<void> playAudio(String path) async {
 
 // function to handle media playback
 void mediaPlaybackAction(String action) {
-  if (action == "Pause") {
+  if (action == "pause") {
     if (audioPlayer.playing == true) {
       audioPlayer.pause();
     } else {

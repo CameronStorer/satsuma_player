@@ -87,14 +87,18 @@ class CustomTabController extends StatelessWidget {
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  mediaPlaybackAction("shuffle");
+                },
                 icon: const Icon(Icons.shuffle),
                 iconSize: 18,
                 padding: EdgeInsets.all(25),
                 constraints: const BoxConstraints(),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  mediaPlaybackAction("rewind");
+                },
                 icon: const Icon(Icons.fast_rewind_rounded),
                 iconSize: 40,
                 padding: EdgeInsets.all(20),
@@ -102,7 +106,7 @@ class CustomTabController extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  mediaPlaybackAction("Pause");
+                  mediaPlaybackAction("pause");
                 },
                 icon: const Icon(Icons.pause_rounded),
                 iconSize: 40,
@@ -110,14 +114,18 @@ class CustomTabController extends StatelessWidget {
                 constraints: const BoxConstraints(),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  mediaPlaybackAction("forward");
+                },
                 icon: const Icon(Icons.fast_forward_rounded),
                 iconSize: 40,
                 padding: EdgeInsets.all(20),
                 constraints: const BoxConstraints(),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  mediaPlaybackAction("loop");
+                },
                 icon: const Icon(Icons.loop),
                 iconSize: 18,
                 padding: EdgeInsets.all(25),
