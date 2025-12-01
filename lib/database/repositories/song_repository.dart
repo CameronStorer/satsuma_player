@@ -1,5 +1,6 @@
 //import
 import '../app_database.dart';
+import '../daos/song_dao.dart';
 
 class SongRepository {
   final SongDao _songDao;
@@ -19,7 +20,6 @@ class SongRepository {
 
   Future<Song?> getSongById(int id) => _songDao.getSongById(id);
 }
-
 
 /*
 

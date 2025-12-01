@@ -17,10 +17,8 @@ class _SettingsTabState extends State<SettingsTab> {
   // build the UI for this tab content
   @override
   Widget build(BuildContext context) {
-
     ThemeMode themeMode = ThemeMode.light;
-    bool isDarkMode = false;
-
+    bool isDarkMode = true;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -37,7 +35,13 @@ class _SettingsTabState extends State<SettingsTab> {
               value: themeMode == ThemeMode.dark,
               onChanged: (value) {
                 setState(() {
-                  themeMode = value ? ThemeMode.dark : ThemeMode.light;
+                  if (themeMode == ThemeMode.dark) {
+                    themeMode = ThemeMode.light;
+                    isDarkMode = false;
+                  } else {
+                    themeMode = ThemeMode.dark;
+                    isDarkMode = true;
+                  }
                 });
               },
             ),

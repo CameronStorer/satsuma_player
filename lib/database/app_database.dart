@@ -11,13 +11,14 @@ import 'package:path_provider/path_provider.dart';
 import 'tables.dart';
 import 'daos/song_dao.dart';
 import 'daos/playlist_dao.dart';
+import 'daos/playlistsong_dao.dart';
 
 part 'app_database.g.dart'; // Drift generator output
 
 // auto generates DAO's?
 @DriftDatabase(
   tables: [Songs, Playlists, PlaylistSongs],
-  daos: [SongDao, PlaylistSongDao],
+  daos: [SongDao, PlaylistDao, PlaylistSongDao],
 )
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());

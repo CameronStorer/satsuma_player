@@ -23,7 +23,7 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
 
   // get by ID
   Future<Song?> getSongById(int id) =>
-      (select(songs)..where((tbl) => tbl.id.equals(id))).getsingleorNull();
+      (select(songs)..where((tbl) => tbl.id.equals(id))).getSingleOrNull();
 
   // Update
   Future<bool> updateSong(Song song) => update(songs).replace(song);
