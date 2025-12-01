@@ -1,9 +1,10 @@
 // import required libraries
 import 'package:flutter/material.dart';
+import 'package:satsuma_player/database/app_database.dart';
 import '../app_logic/media_management.dart';
 import 'package:path/path.dart' as path; // file path recognition
 import 'dart:io'; // input/output
-
+import '../database/repositories/song_repository.dart';
 
 // define the StatefulWidget class
 class SongsTab extends StatefulWidget {
@@ -40,13 +41,7 @@ class _SongsTabState extends State<SongsTab> {
                       children: [
                         const Padding(
                           padding: EdgeInsets.all(16.0),
-                          child: Text(
-                            'Your Songs',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: Text('Your Songs', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                         ),
                       ],
                     ),
@@ -54,8 +49,14 @@ class _SongsTabState extends State<SongsTab> {
                     Row(
                       // padding: const EdgeInsets.symmetric(horizontal: 2),
                       children: [
-                        TextButton(onPressed: () {}, child: Column(children: [Icon(Icons.search), Text('Search') ]),),
-                        TextButton(onPressed: () {}, child: Column(children: [Icon(Icons.sort), Text('Sort By' )]),),
+                        TextButton(
+                          onPressed: () {},
+                          child: Column(children: [Icon(Icons.search), Text('Search')]),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: Column(children: [Icon(Icons.sort), Text('Sort By')]),
+                        ),
                       ],
                     ),
                   ],
@@ -66,8 +67,8 @@ class _SongsTabState extends State<SongsTab> {
         ),
         body: Expanded(
           child: Scaffold(
-            body: FutureBuilder<List<File>>(
-              future: scanForMedia(),
+            body: FutureBuilder<List<Song>>(
+              future: AudioManager.scanForMedia(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -77,19 +78,19 @@ class _SongsTabState extends State<SongsTab> {
                   return const Center(child: Text("No media found."));
                 }
 
-                final files = snapshot.data!;
+                final songs = snapshot.data!;
 
                 return ListView.builder(
-                  itemCount: files.length,
+                  itemCount: songs.length,
                   itemBuilder: (context, index) {
-                    final file = files[index];
+                    final song = songs[index];
                     // final filename = file.path.split('/').last;
 
                     return ListTile(
                       leading: const Icon(Icons.music_note),
-                      title: Text(path.basename(file.path)),
+                      title: Text(path.basename(song.path)),
                       onTap: () {
-                        playMedia(file);
+                        AudioManager.playMedia(song);
                       },
                     );
                   },

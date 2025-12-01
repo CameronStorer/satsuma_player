@@ -13,4 +13,8 @@ Process
 5. Run the command in terminal:
 flutter pub run build_runner build
 
+also this command is used sometimes: 
+flutter pub run build_runner build --delete-conflicting-outputs
+
+
 so that the correct database is built

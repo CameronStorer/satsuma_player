@@ -1,7 +1,7 @@
 //import
 import 'package:drift/drift.dart';
-import '../app_database.dart';
-import '../tables.dart';
+import '../../app_database.dart';
+import '../../tables.dart';
 
 part 'playlistsong_dao.g.dart';
 

@@ -16,7 +16,8 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   SongDao(AppDatabase db) : super(db);
 
   // insert a song
-  Future<int> insertSong(SongsCompanion song) => into(songs).insert(song);
+  Future<int> insertSong(SongsCompanion song) =>
+    into(songs).insert(song, mode: InsertMode.insertOrIgnore);
 
   // Get all songs
   Future<List<Song>> getAllSongs() => select(songs).get();

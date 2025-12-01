@@ -1,5 +1,6 @@
 // import required libraries
 import 'package:flutter/material.dart';
+import 'package:satsuma_player/main.dart';
 
 // define the StatefulWidget class
 class SettingsTab extends StatefulWidget {
@@ -17,8 +18,8 @@ class _SettingsTabState extends State<SettingsTab> {
   // build the UI for this tab content
   @override
   Widget build(BuildContext context) {
-    ThemeMode themeMode = ThemeMode.light;
-    bool isDarkMode = true;
+    ThemeMode themeMode = ThemeMode.dark;
+    bool _isDarkTheme = themeMode == ThemeMode.dark;
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -32,16 +33,11 @@ class _SettingsTabState extends State<SettingsTab> {
           ListTile(
             title: Text('Dark Mode'),
             trailing: Switch(
-              value: themeMode == ThemeMode.dark,
+              value: _isDarkTheme,
               onChanged: (value) {
                 setState(() {
-                  if (themeMode == ThemeMode.dark) {
-                    themeMode = ThemeMode.light;
-                    isDarkMode = false;
-                  } else {
-                    themeMode = ThemeMode.dark;
-                    isDarkMode = true;
-                  }
+                  _isDarkTheme = value;
+                  themeMode = value ? ThemeMode.dark : ThemeMode.light;
                 });
               },
             ),

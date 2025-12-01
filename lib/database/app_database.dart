@@ -10,8 +10,8 @@ import 'package:path_provider/path_provider.dart';
 // local imports
 import 'tables.dart';
 import 'daos/song_dao.dart';
-import 'daos/playlist_dao.dart';
-import 'daos/playlistsong_dao.dart';
+import 'daos/playlist_daos/playlist_dao.dart';
+import 'daos/playlist_daos/playlistsong_dao.dart';
 
 part 'app_database.g.dart'; // Drift generator output
 

@@ -5,20 +5,13 @@ import 'package:drift/drift.dart';
 
 // create Songs table (holds all songs)
 class Songs extends Table {
-  // create id column
-  IntColumn get id => integer().autoIncrement()();
-
-  // full file path to the audio file
-  TextColumn get path => text()();
-
-  // song meta data (title, artist, durationMs)
-  TextColumn get title => text().withDefault(const Constant('Unkown Title'))();
-  TextColumn get artist =>
-      text().withDefault(const Constant('Unkown Artist'))();
+  IntColumn get id => integer().autoIncrement()(); // create id column
+  TextColumn get path => text().unique()(); // full file path to the audio file
+  TextColumn get filename => text().nullable()();
+  TextColumn get title => text().withDefault(const Constant('Unkown Title'))(); // song meta data (title, artist, durationMs)
+  TextColumn get artist => text().withDefault(const Constant('Unkown Artist'))();
   IntColumn get durationMs => integer().withDefault(const Constant(0))();
-
-  // useful fields for sorting / filtering
-  BoolColumn get favorite => boolean().withDefault(const Constant(false))();
+  BoolColumn get favorite => boolean().withDefault(const Constant(false))(); // useful fields for sorting / filtering
   DateTimeColumn get addedAt => dateTime().withDefault(currentDateAndTime)();
 }
 

@@ -22,28 +22,15 @@ class SatsumaPlayer extends StatelessWidget {
     return MaterialApp(
       title: 'Satsuma Player',
 
-      // 1. Define light theme (default theme)
+      // default theme (light)
       theme: ThemeData(
-        // light brightness
-        brightness: Brightness.light,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange, brightness: Brightness.light),
         useMaterial3: true,
-        // Custom light colors
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepOrange,
-          brightness: Brightness.light,
-        ),
       ),
-
-      // 2. Define dark theme
+      // dark theme
       darkTheme: ThemeData(
-        // dark brightness
-        brightness: Brightness.dark,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange, brightness: Brightness.dark),
         useMaterial3: true,
-        // Custom dark colors
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.deepOrange,
-          brightness: Brightness.dark,
-        ),
       ),
 
       home: CustomTabController(),
@@ -54,7 +41,9 @@ class SatsumaPlayer extends StatelessWidget {
 // tab controller class
 class CustomTabController extends StatelessWidget {
   //constructor
-  const CustomTabController({super.key});
+  CustomTabController({super.key});
+
+  final AudioManager aM = AudioManager();
 
   // build UI
   @override
@@ -76,19 +65,18 @@ class CustomTabController extends StatelessWidget {
         ),
 
         // Now display the contents of each tab
-        body: const TabBarView(
-          children: [PlaylistsTab(), SongsTab(), DownloadTab(), SettingsTab()],
-        ),
+        body: const TabBarView(children: [PlaylistsTab(), SongsTab(), DownloadTab(), SettingsTab()]),
 
         // bottom button bar
-        bottomNavigationBar: Container(color: Color.fromARGB(255, 228, 143, 6),
+        bottomNavigationBar: Container(
+          color: Color.fromARGB(255, 228, 143, 6),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
               IconButton(
                 onPressed: () {
-                  mediaPlaybackAction("shuffle");
+                  aM.mediaPlaybackAction("shuffle");
                 },
                 icon: const Icon(Icons.shuffle),
                 iconSize: 18,
@@ -97,7 +85,7 @@ class CustomTabController extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  mediaPlaybackAction("rewind");
+                  aM.mediaPlaybackAction("rewind");
                 },
                 icon: const Icon(Icons.fast_rewind_rounded),
                 iconSize: 40,
@@ -106,7 +94,7 @@ class CustomTabController extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  mediaPlaybackAction("pause");
+                  aM.mediaPlaybackAction("pause");
                 },
                 icon: const Icon(Icons.pause_rounded),
                 iconSize: 40,
@@ -115,7 +103,7 @@ class CustomTabController extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  mediaPlaybackAction("forward");
+                  aM.mediaPlaybackAction("forward");
                 },
                 icon: const Icon(Icons.fast_forward_rounded),
                 iconSize: 40,
@@ -124,7 +112,7 @@ class CustomTabController extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  mediaPlaybackAction("loop");
+                  aM.mediaPlaybackAction("loop");
                 },
                 icon: const Icon(Icons.loop),
                 iconSize: 18,

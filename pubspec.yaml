@@ -21,6 +21,7 @@ dependencies:
   just_audio_windows: any
   media_scanner: any
   youtube_explode_dart: any
+  permission_handler: any
   # on_audio_query: ^2.9.0
   # flutter_launcher_icons: ^0.14.4
   # firebase_core: ^4.2.1
