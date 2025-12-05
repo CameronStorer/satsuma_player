@@ -43,6 +43,7 @@ class CustomTabController extends StatelessWidget {
   //constructor
   CustomTabController({super.key});
 
+  // Audio player object
   final AudioManager aM = AudioManager();
 
   // build UI
@@ -95,6 +96,7 @@ class CustomTabController extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   aM.mediaPlaybackAction("pause");
+                  
                 },
                 icon: const Icon(Icons.pause_rounded),
                 iconSize: 40,

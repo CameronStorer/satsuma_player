@@ -56,11 +56,13 @@ class AudioManager {
 
   // initialize the database classes
   static final repo = SongRepository(AppDatabase());
+
   // class variable holding the currently playing song
   static Song? current_song;
   static bool looping = false;
   static final AudioPlayer audioPlayer = AudioPlayer();
   bool hasStartedPlaying = false;
+  bool currentlyPlaying = false;
 
   // ensure that the AudioManager can initialize itself and keep track of music
   void initialize() {
@@ -101,26 +103,27 @@ class AudioManager {
       }
       await MediaScanner.loadMedia(path: "/storage/emulated/0/Music/Satsuma Player");
     }
+
     // set var dir = media directory
     final dir = await getMediaDir();
     // allowed extension types
     const allowedExtensions = ['.mp3', '.wav', '.ogg', '.m4a'];
-    final files = <File>[];
+    int counter = 0;
 
     // Recursively list everything
     await for (final entity in dir.list(recursive: true, followLinks: false)) {
       if (entity is File) {
         final ext = path.extension(entity.path).toLowerCase();
-        if (allowedExtensions.contains(ext)) {
-          // add the files to the files list
-          files.add(entity);
+        if (allowedExtensions.contains(ext) && !(await repo.songExists(path))) {
           // add the files to the database
           await repo.addSongFromFile(entity.path);
+          counter++;
         }
       }
     }
     print("Media scan complete!");
-    print("Database updated by ${files.length} songs");
+    print("Database updated by $counter songs");
+    print("New song total: ${repo.songCount()}");
 
     return repo.getAllSongs();
   }

@@ -1,3 +1,10 @@
+Grand Overview:
+tables.dart defines the tables of database
+the dao.dart files define the queries (insert, delete, update, fetch)
+app_database.dart ties the dao's to the tables
+repositories simple wrapper for UI to access database
+
+
 Tables = define the data
 AppDatabase = connects everything
 DAOs = perform database queries
