@@ -123,9 +123,7 @@ class AudioManager {
     }
     print("Media scan complete!");
     print("Database updated by $counter songs");
-    if (await repo.songCount() is int){
-      print("New song total: ${await repo.songCount()}");
-    }
+    print("New song total: ${repo.songCount()}");
 
     return repo.getAllSongs();
   }

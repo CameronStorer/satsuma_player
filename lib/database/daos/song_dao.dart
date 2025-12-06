@@ -22,7 +22,7 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   Future<List<Song>> getAllSongs() => select(songs).get();
 
   // Count all songs
-  Future<int?> countSongs() async {
+  Future<int?> countSongs() {
     final countExp = songs.id.count();
     return (selectOnly(songs)..addColumns([countExp])).map((row) => row.read(countExp)).getSingle();
   }
