@@ -16,7 +16,7 @@ class SongRepository {
   // get all songs: direct Database Access Object communicator
   Future<List<Song>> getAllSongs() => _songDao.getAllSongs();
   // Sort them by title
-  Future<List<Song>> getSortedByTitle() => _songDao.sortedByTitle();
+  // Future<List<Song>> getSortedByTitle() => _songDao.sortedByTitle();
 
   // Add song from file path
   Future<void> addSongFromFile(String filePath) async {

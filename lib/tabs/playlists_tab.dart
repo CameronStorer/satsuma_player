@@ -42,8 +42,11 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
+            Row(
+              children: [
             IconButton(onPressed: () {}, padding: EdgeInsets.all(15), icon: Icon(Icons.add_circle)),
-          ],
+            IconButton(onPressed: () {}, padding: EdgeInsets.all(15), icon: Icon(Icons.remove_circle)),
+          ])],
         ),
         // --- build the playlist grid ---
         Expanded(

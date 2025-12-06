@@ -107,7 +107,7 @@ class AudioManager {
     // set var dir = media directory
     final dir = await getMediaDir();
     // allowed extension types
-    const allowedExtensions = ['.mp3', '.wav', '.ogg', '.m4a'];
+    const allowedExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.flac', '.acc', '.vorbis', '.alac'];
     int counter = 0;
 
     // Recursively list everything
@@ -135,7 +135,8 @@ class AudioManager {
     final song_path = song.path;
     if (song_path == Null) return;
     final ext = path.extension(song_path).toLowerCase();
-    if (ext == '.mp3' || ext == '.wav' || ext == '.m4a') {
+    const allowedExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.flac', '.acc', '.vorbis', '.alac'];
+    if (allowedExtensions.contains(ext)) {
       try {
         
         await audioPlayer.setFilePath(song_path);
