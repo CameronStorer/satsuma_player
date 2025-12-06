@@ -24,12 +24,12 @@ class SatsumaPlayer extends StatelessWidget {
 
       // default theme (light)
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orange, brightness: Brightness.light),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue, brightness: Brightness.light),
         useMaterial3: true,
       ),
       // dark theme
       darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange, brightness: Brightness.dark),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey, brightness: Brightness.dark),
         useMaterial3: true,
       ),
 
@@ -54,7 +54,7 @@ class CustomTabController extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           toolbarHeight: 0,
-          backgroundColor: const Color.fromARGB(255, 228, 143, 6),
+          backgroundColor: const Color.fromARGB(255, 84, 6, 228),
           bottom: const TabBar(
             tabs: [
               Tab(text: 'Playlists', icon: Icon(Icons.list)),
@@ -70,7 +70,7 @@ class CustomTabController extends StatelessWidget {
 
         // bottom button bar
         bottomNavigationBar: Container(
-          color: Color.fromARGB(255, 228, 143, 6),
+          color: Color.fromARGB(255, 6, 95, 228),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
