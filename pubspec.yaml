@@ -1,5 +1,5 @@
 name: satsuma_player
-description: "A modernized music playing app."
+description: "A modernized multi-platform music playing app."
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
 version: 1.0.0+1
@@ -15,6 +15,7 @@ dependencies:
   path: any
   path_provider: any
   just_audio: any
+  audioplayers: any
   video_player: any
   drift: any
   drift_flutter: any
@@ -22,6 +23,7 @@ dependencies:
   media_scanner: any
   youtube_explode_dart: any
   permission_handler: any
+
   # on_audio_query: ^2.9.0
   # flutter_launcher_icons: ^0.14.4
   # firebase_core: ^4.2.1

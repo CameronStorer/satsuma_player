@@ -96,9 +96,7 @@ class AudioManager {
     // });
   }
 
-
-
-  // function to return a list of all media files detected by the app
+  // function to return a list of all media files detected by the app after scanned
   static Future<List<Song>> scanForMedia() async {
     // first scan files from android storage if allowed
     if (Platform.isAndroid) {
@@ -180,7 +178,9 @@ class AudioManager {
           }
         } else if (looping == 0){ // if no looping active
           playMedia(nextSong);
-        } else { // single loop on
+        } else if (looping == 1){ // if no looping active
+          playMedia(nextSong);
+        } else if (looping == 2){ // single loop on
           playMedia(song);
         }
         print("FORWARD");
@@ -205,6 +205,8 @@ class AudioManager {
           }
         } else if (looping == 0){ // if looping inactive
           playMedia(prevSong);
+        } else if (looping == 1){ // if looping inactive
+          playMedia(prevSong);
         } else {
           playMedia(song);
         }
@@ -213,14 +215,24 @@ class AudioManager {
       case "loop":
         if (looping == 0) {
           looping = 1;
-          print("LOOPING = GENERAL");
         } else if (looping == 1) {
           looping = 2;
-          print("LOOPING = SINGLE");
-        } else {
+        } else if (looping == 2){
           looping = 0;
-          print("LOOPING = FALSE");
         }
+        print("LOOPING = $looping");
     }
   }
+
+  /// Listener that reacts when playback ends.
+  void onPlayerStateChanged(PlayerState state) {
+    // `processingState` becomes `ProcessingState.completed`
+    if (state.processingState == ProcessingState.completed) {
+      print('Track finished!');
+      mediaPlaybackAction("forward");
+    }
+  }
+
+  // clean up when widget is disposed
+  void dispose() => audioPlayer.dispose();
 }

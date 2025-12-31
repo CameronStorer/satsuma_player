@@ -50,6 +50,10 @@ class _SongsTabState extends State<SongsTab> {
                       // padding: const EdgeInsets.symmetric(horizontal: 2),
                       children: [
                         TextButton(
+                          onPressed: () {AudioManager.scanForMedia();},
+                          child: Column(children: [Icon(Icons.scanner), Text('Rescan')]),
+                        ),
+                        TextButton(
                           onPressed: () {},
                           child: Column(children: [Icon(Icons.search), Text('Search')]),
                         ),
