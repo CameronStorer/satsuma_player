@@ -3,7 +3,6 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  audioplayers_windows
   just_audio_windows
   permission_handler_windows
   sqlite3_flutter_libs

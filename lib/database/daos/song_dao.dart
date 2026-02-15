@@ -36,8 +36,10 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   // Delete
   Future<int> deleteSong(int id) => (delete(songs)..where((tbl) => tbl.id.equals(id))).go();
 
-  // Query sorted
-  Future<List<Song>> sortedByTitle() => (select(songs)..orderBy([(t) => OrderingTerm.asc(t.title)])).get();
+  // Query sorted (generic sorting function)
+  Future<List<Song>> getSongsSorted(Expression<Object> Function(Songs) sorter, {bool descending = false}) {
+    return (select(songs)..orderBy([(t) => descending ? OrderingTerm.desc(sorter(t)) : OrderingTerm.asc(sorter(t))])).get();
+  }
 
   // Mark favorite - inputs = id and value
   Future toggleFavorite(int id, bool value) => (update(songs)..where((s) => s.id.equals(id))).write(SongsCompanion(favorite: Value(value)));
@@ -46,6 +48,11 @@ class SongDao extends DatabaseAccessor<AppDatabase> with _$SongDaoMixin {
   Future<bool> songExists(String path) async {
     final query = select(songs)..where((tbl) => tbl.path.equals(path));
     return (await query.get()).isNotEmpty;
+  }
+
+  // Get all songs where favorite is true
+  Future<List<Song>> getFavoriteSongs() {
+    return (select(songs)..where((tbl) => tbl.favorite.equals(true))).get();
   }
 }
 
