@@ -1,10 +1,10 @@
 // import appropriate libraries
 import 'package:flutter/material.dart';
-import 'package:satsuma_player/app_logic/media_management.dart';
 import 'tabs/playlists_tab.dart';
 import 'tabs/songs_tab.dart';
 import 'tabs/download_tab.dart';
 import 'tabs/settings_tab.dart';
+import 'package:satsuma_player/app_logic/media_handler.dart';
 
 // main func
 void main() {
@@ -96,7 +96,6 @@ class CustomTabController extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   aM.mediaPlaybackAction("pause");
-                  
                 },
                 icon: const Icon(Icons.pause_rounded),
                 iconSize: 40,

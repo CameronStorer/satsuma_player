@@ -44,13 +44,8 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
             ),
             Row(
               children: [
-<<<<<<< HEAD
-                IconButton(onPressed: () {}, padding: EdgeInsets.all(15), icon: Icon(Icons.add_circle)),
-                IconButton(onPressed: () {}, padding: EdgeInsets.all(15), icon: Icon(Icons.remove_circle)),
-=======
             IconButton(onPressed: () {}, padding: EdgeInsets.all(15), icon: Icon(Icons.add_circle)),
             IconButton(onPressed: () {}, padding: EdgeInsets.all(15), icon: Icon(Icons.remove_circle)),
->>>>>>> cameron
           ])],
         ),
         // --- build the playlist grid ---

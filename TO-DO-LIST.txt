@@ -1,0 +1,39 @@
+USE DATA STRUCTURES QUEUE AND STACK TO HANDLE HISTORY, AND NEXT IN LINE
+    have the ability to shuffle that DS
+    ability to sort by length, a-z, artist a-z, 
+Update Database to correctly display all songs and rescan appropriately
+
+ORDER:
+
+last 50 HISTORY stack (most recent on top)
+next in default queue (in order of playlist) (remainder of playlist from next to last)
+play next queue (queue) (user curated queue from first requested to last)
+
+add hold-click/right-click functionality
+add actually OS current audio-playing functionality
+pull coverart/artist/genre/album/duration
+
+update database to correctly store songs and add them to playlists.
+
+rescan when button pressed, or when app opens? (what about when lots of songs)
+
+carry over the song db from prev session
+    store things to txt?
+
+
+make calls to Google drive api to store songs/playlist attributes in GDrive?/retreive them
+
+correct the downloads page to be a web-browser that starts at yt music online page and has a download sub-button that handles download
+    - download stores to correct folder and rescans library
+
+add sub menus for playlist editing/creation
+    - custom color picker for themes
+    - default themes
+    - dark/light
+
+update buttons on nav bar for responsiveness
+
+fix settings menu
+
+fix minus and plus of playlists menu
+

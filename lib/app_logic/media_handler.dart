@@ -71,29 +71,27 @@ class AudioManager {
   static int looping = 0;  // 0 = false, 1 = yes general, 2 = yes single
   static bool shuffle = false; // shuffle attribute
   static final AudioPlayer audioPlayer = AudioPlayer();
-  bool hasStartedPlaying = false;
-  bool currentlyPlaying = false;
   // list holding compatible file extensions
   static const allowedExtensions = ['.mp3', '.wav', '.ogg', '.m4a', '.flac', '.acc', '.vorbis', '.alac'];
+  static bool _isManualSelection = false;
+  // bool hasStartedPlaying = false;
+  // bool currentlyPlaying = false;
 
   // ensure that the AudioManager can initialize itself and keep track of music
   void initialize() {
-    // WIP AUTOPLAY
-    // // ensure that the music plays in order shown on-screen
-    // // Listen to position to detect actual playback
-    // audioPlayer.positionStream.listen((position) {
-    //   if (position > Duration.zero) {
-    //     hasStartedPlaying = true;            // Song really started
-    //   }
-    // });
+    print("initializing");
 
-    // audioPlayer.processingStateStream.listen((state) async {
-    //   if (state == ProcessingState.completed && hasStartedPlaying) {
-    //     print("REAL completion → go forward");
-    //     hasStartedPlaying = false;           // reset for next song
-    //     mediaPlaybackAction("forward");
-    //   }
-    // });
+    // Logic for autoplaying next song
+    audioPlayer.playerStateStream.listen((state) {
+      if (!_isManualSelection && state.processingState == ProcessingState.completed) {
+        // extra checks to ensure that the song has completed successfully
+        if (audioPlayer.position >= (audioPlayer.duration ?? Duration.zero) - Duration(milliseconds: 100)) {
+          print("SONG COMPLETED!");
+          // Call your 'skip to next' function here
+          mediaPlaybackAction("forward");
+        }
+      }
+    });
   }
 
   // function to return a list of all media files detected by the app after scanned
@@ -133,8 +131,9 @@ class AudioManager {
 
   // PLAY AN AUDIO FILE
   static void playMedia(Song song) async {
+    _isManualSelection = true; // Tell the listener to chill
     final song_path = song.path;
-    if (song_path == Null) return;
+    if (song_path == null) return;
     final ext = path.extension(song_path).toLowerCase();
     if (allowedExtensions.contains(ext)) {
       try {
@@ -147,6 +146,8 @@ class AudioManager {
     } else {
       print("Unsupported file type: $ext");
     }
+    print(_isManualSelection);
+    _isManualSelection = false; // Back to normal
   }
 
   // function to handle media playback
@@ -184,6 +185,7 @@ class AudioManager {
           playMedia(song);
         }
         print("FORWARD");
+        print(current_song);
       // REWIND
       case "rewind":
         final song = current_song;
@@ -221,15 +223,6 @@ class AudioManager {
           looping = 0;
         }
         print("LOOPING = $looping");
-    }
-  }
-
-  /// Listener that reacts when playback ends.
-  void onPlayerStateChanged(PlayerState state) {
-    // `processingState` becomes `ProcessingState.completed`
-    if (state.processingState == ProcessingState.completed) {
-      print('Track finished!');
-      mediaPlaybackAction("forward");
     }
   }
 
