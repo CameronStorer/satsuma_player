@@ -112,11 +112,6 @@ class _DownloadTabState extends State<DownloadTab> {
     }
   }
 
-
-
-
-
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[

@@ -20,10 +20,10 @@ class Playlists extends Table {
   IntColumn get id => integer().autoIncrement()();
   TextColumn get name => text()();
   IntColumn get songCount => integer().withDefault(const Constant(0))();
+  BoolColumn get isPinned => boolean().withDefault(const Constant(false))(); 
 }
-
-// create the PlaylistSongs table (holds the songs in each playlist)
 class PlaylistSongs extends Table {
+<<<<<<< HEAD
 
 
 
@@ -338,7 +338,13 @@ class PlaylistSongs extends Table {
   
   
   // zz()();
+=======
+>>>>>>> cameron
   IntColumn get playlistId => integer().references(Playlists, #id)();
   IntColumn get songId => integer().references(Songs, #id)();
-  IntColumn get position => integer()(); // order within playlist
+  IntColumn get position => integer()();
+  
+  // Enforces that the combination of playlistId and songId must be unique.
+  @override
+  Set<Column> get primaryKey => {playlistId, songId}; 
 }
