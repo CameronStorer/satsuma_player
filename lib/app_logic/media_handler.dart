@@ -64,6 +64,40 @@ Future<bool> requestStoragePermission() async {
   }
   return false;
 }
+//////// CONVERT FILEPATHS INTO SONG COMPANION TYPES //////////////
+Future<SongsCompanion> fileToCompanion(File file) async {
+  // read the metadata
+  final metadata = await MetadataGod.readMetadata(file: file.path);
+
+  // Helper function to handle the "Get or Create" logic inside the scan
+  Future<int> getOrCreate(String? name, TableInfo table, dynamic companion) async {
+    // ensure name is not null or blank
+    final sanitizedName = (name == null || name.isEmpty) ? 'Unknown' : name;
+    
+    // 1. Try to find the existing record
+    final existing = await getByTitle(table, sanitizedName);
+    if (existing != null) return (existing as dynamic).id;
+
+    // 2. If not found, insert and return the NEW id
+    // Assuming your insert function returns the generated int ID
+    return await insert(db.artists, ArtistsCompanion(title: Value(sanitizedName)));
+  }
+
+  // Execute the lookups
+  final artistId = await getOrCreate(metadata.artist, db.artists, (v) => ArtistsCompanion(title: v));
+  final albumId = await getOrCreate(metadata.album, db.albums, (v) => AlbumsCompanion(title: v));
+  final genreId = await getOrCreate(metadata.genre, db.genres, (v) => GenresCompanion(title: v));
+
+  return SongsCompanion(
+    path: Value(file.path),
+    filename: Value(path.basename(file.path)),
+    title: Value(metadata.title ?? path.basenameWithoutExtension(file.path)),
+    artistId: Value(artistId),
+    albumId: Value(albumId),
+    genreId: Value(genreId),
+    durationMS: Value(metadata.durationMs?.toInt() ?? 0),
+  );
+}
 
 ////////// AUDIOMANAGER CLASS /////////////////////////////////
 class AudioManager {
@@ -100,49 +134,6 @@ class AudioManager {
       }
     });
   }
-
-//////// CONVERT FILEPATHS INTO SONG COMPANION TYPES //////////////
-Future<SongsCompanion> fileToCompanion(File file) async {
-  // read the tags
-  final metadata = await MetadataGod.readMetadata(file.path);
-
-  // add artist to artist table if not already present
-  if (metadata.artist != null && getByTitle(db.artists, metadata.artist!) == null){
-      insert(db.artists, ArtistsCompanion(title:Value(metadata.artist!)));
-  }
-  // add genre to genre table if not already present
-  if (metadata.genre != null && getByTitle(db.genres, metadata.genre!) == null){
-      insert(db.genres, GenresCompanion(title:Value(metadata.genre!)));
-  }
-  // add album to album table if not already present
-  if (metadata.album != null && getByTitle(db.albums, metadata.album!) == null){
-      insert(db.albums, AlbumsCompanion(title:Value(metadata.album!)));
-  }
-
-  Artist? getArtistId = await getByTitle(db.artists, metadata.artist!);
-  Genre? getGenreId = await getByTitle(db.genres, metadata.genre!);
-  Album? getAlbumId = await getByTitle(db.albums, metadata.album!);
-
-  
-
-  // map metadata to drift columns
-  return SongsCompanion(
-    path: Value(file.path),
-    filename: Value(path.basename(file.path)),
-    // Use the title from tags, or fallback to filename
-    title: Value(metadata.title ?? path.basenameWithoutExtension(file.path)),
-    artistId: await getByTitle(db.artists, metadata.artist!),
-    
-    
-    
-    Value(metadata.artist ?? 1),
-    albumId: Value(metadata.album ?? 1),
-    durationMS: Value(metadata.durationMs?.toInt() ?? 0),
-    // If you have a genre column
-    genre: Value(metadata.genre ?? 'Misc'),
-  );
-}
-
 
 /////// GET LIST OF MEDIA FILES DETECTED BY THE APP ON SCAN //////
   static Future<List<Song>> scanForMedia() async {
@@ -184,9 +175,7 @@ Future<SongsCompanion> fileToCompanion(File file) async {
       }
     }
     print("Media insertion complete!");
-    if (await getSongCount() is int){
-      print("New song total: ${await getSongCount()}");
-    }
+    print("New song total: ${await count(db.songs)}");
 
     // RETURN ALL SONGS IN THE SONGS TABLE AFTER ALL LOCAL SONGS HAVE BEEN ADDED
     return getAllSongs();
@@ -228,11 +217,11 @@ Future<SongsCompanion> fileToCompanion(File file) async {
       case "forward":
         final song = currentSong;
         if (song == null) return;
-        final nextSong = await getSongById(song.id + 1);
+        final nextSong = await getById(db.songs, song.id + 1);
         if (nextSong == null) {
           // reloop if that setting is turned on
           if (looping == 1) {
-            final restartSong = await getSongById(1);
+            final restartSong = await getById(db.songs, 1);
             if (restartSong == null) {
               return;
             } else {
@@ -252,7 +241,7 @@ Future<SongsCompanion> fileToCompanion(File file) async {
       case "rewind":
         final song = currentSong;
         if (song == null) return;
-        final prevSong = await getSongById(song.id - 1);
+        final prevSong = await getById(db.songs, song.id - 1);
         // if at top of list
         if (prevSong == null) {
           // reloop if that setting is turned on
@@ -260,7 +249,7 @@ Future<SongsCompanion> fileToCompanion(File file) async {
             // go back to the last song
             List<Song> allSongs = await getAllSongs();
             int totalSongs = allSongs.length;
-            final restartSong = await getSongById(totalSongs);
+            final restartSong = await getById(db.songs, totalSongs);
             if (restartSong != null) {
               playMedia(restartSong);
               return;

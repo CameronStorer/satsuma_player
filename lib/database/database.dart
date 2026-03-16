@@ -4,7 +4,6 @@
 // ADDITIONALLY, you must place all important code within the lib folder for the above build command to work correctly
 // YOU MUST ALSO CREATE PUBSPEC.YAML and fill it with all the dependencies
 
-
 // imports
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
@@ -96,7 +95,7 @@ MigrationStrategy get migration {
       await into(artists).insertOnConflictUpdate(
         ArtistsCompanion.insert(
           id: const Value(1), 
-          name: const Value('Unknown Artist'),
+          title: const Value('Unknown Artist'),
         ),
       );
 
@@ -104,7 +103,7 @@ MigrationStrategy get migration {
       await into(genres).insertOnConflictUpdate(
         GenresCompanion.insert(
           id: const Value(1),
-          genre: const Value('Unknown Genre'),
+          title: const Value('Unknown Genre'),
         ),
       );
     },

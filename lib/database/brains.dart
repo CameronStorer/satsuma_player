@@ -21,6 +21,12 @@ Future<D?> getById<T extends Table, D>(TableInfo<T, D> table, int id) {
   return (db.select(table)..where(
     (tbl) => (tbl as dynamic).id.equals(id))).getSingleOrNull();
 }
+// READ BY TITLE
+Future<D?> getByTitle<T extends Table, D>(TableInfo<T, D> table, String title) {
+  // We cast to dynamic so we can access the .id column generically
+  return (db.select(table)..where(
+    (tbl) => (tbl as dynamic).title.equals(title))).getSingleOrNull();
+}
 // UPDATE
 // D is the Data Class (Song), C is the Companion (SongsCompanion)
 Future<bool> update<T extends Table, D, C extends UpdateCompanion<D>>(TableInfo<T, D> table, C companion,) {
@@ -35,13 +41,6 @@ Future<int> deleteById<T extends Table, D>(TableInfo<T, D> table, int id) {
 Future<int> count<T extends Table, D>(TableInfo<T, D> table){
   return table.count().getSingle();
 }
-// READ BY TITLE
-Future<D?> getByTitle<T extends Table, D>(TableInfo<T, D> table, String title) {
-  // We cast to dynamic so we can access the .id column generically
-  return (db.select(table)..where(
-    (tbl) => (tbl as dynamic).title.equals(title))).getSingleOrNull();
-}
-
 
 ////////////////// SONGS SPECIFIC QUERIES //////////////////////////////////
 // ADD SONG FROM FILE PATH
@@ -54,12 +53,6 @@ Future<bool> songExists(String path) async {
   final query = db.select(db.songs)..where((tbl) => tbl.path.equals(path));
   return (await query.get()).isNotEmpty;
 }
-
-// Use a Stream for the UI so the music list is always "Live"
-Stream<List<Song>> watchAllSongs() => db.select(db.songs).watch();
-// KEEP A ONE-TIME 'GET' FOR BACKGROUND LOGIC/PROCESSING
-Future<List<Song>> getAllSongs() => db.select(db.songs).get();
-
 // LOGIC FOR PERFORMING A FULL RESCAN
 Future<void> rescanLibrary(List<SongsCompanion> newSongs) async {
   await db.batch((batch) {
@@ -69,6 +62,12 @@ Future<void> rescanLibrary(List<SongsCompanion> newSongs) async {
     batch.insertAll(db.songs, newSongs);
   });
 }
+
+// Use a Stream for the UI so the music list is always "Live"
+Stream<List<Song>> watchAllSongs() => db.select(db.songs).watch();
+// KEEP A ONE-TIME 'GET' FOR BACKGROUND LOGIC/PROCESSING
+Future<List<Song>> getAllSongs() => db.select(db.songs).get();
+
 
 // SORT THE SONGS TABLE BY ATTRIBUTE (GENERIC SORTING FUNCTION)
 Future<List<Song>> sortSongs(Expression<Object> Function(Songs) sorter, {bool descending = false}) {
