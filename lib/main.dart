@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'tabs/playlists_tab.dart';
 import 'tabs/songs_tab.dart';
-import 'tabs/download_tab.dart';
 import 'tabs/settings_tab.dart';
+import 'tabs/download_tab.dart';
 import 'package:satsuma_player/app_logic/media_handler.dart';
 import 'package:metadata_god/metadata_god.dart';   // for finding song meta data
 

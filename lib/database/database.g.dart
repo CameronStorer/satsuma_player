@@ -17,16 +17,16 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
       defaultValue: const Constant('Unknown Artist'));
   @override
-  List<GeneratedColumn> get $columns => [id, title];
+  List<GeneratedColumn> get $columns => [id, value];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -40,9 +40,9 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('title')) {
+    if (data.containsKey('value')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
     }
     return context;
   }
@@ -55,8 +55,8 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
     return Artist(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
     );
   }
 
@@ -68,20 +68,20 @@ class $ArtistsTable extends Artists with TableInfo<$ArtistsTable, Artist> {
 
 class Artist extends DataClass implements Insertable<Artist> {
   final int id;
-  final String title;
-  const Artist({required this.id, required this.title});
+  final String value;
+  const Artist({required this.id, required this.value});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['title'] = Variable<String>(title);
+    map['value'] = Variable<String>(value);
     return map;
   }
 
   ArtistsCompanion toCompanion(bool nullToAbsent) {
     return ArtistsCompanion(
       id: Value(id),
-      title: Value(title),
+      value: Value(value),
     );
   }
 
@@ -90,7 +90,7 @@ class Artist extends DataClass implements Insertable<Artist> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Artist(
       id: serializer.fromJson<int>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
+      value: serializer.fromJson<String>(json['value']),
     );
   }
   @override
@@ -98,18 +98,18 @@ class Artist extends DataClass implements Insertable<Artist> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'title': serializer.toJson<String>(title),
+      'value': serializer.toJson<String>(value),
     };
   }
 
-  Artist copyWith({int? id, String? title}) => Artist(
+  Artist copyWith({int? id, String? value}) => Artist(
         id: id ?? this.id,
-        title: title ?? this.title,
+        value: value ?? this.value,
       );
   Artist copyWithCompanion(ArtistsCompanion data) {
     return Artist(
       id: data.id.present ? data.id.value : this.id,
-      title: data.title.present ? data.title.value : this.title,
+      value: data.value.present ? data.value.value : this.value,
     );
   }
 
@@ -117,44 +117,44 @@ class Artist extends DataClass implements Insertable<Artist> {
   String toString() {
     return (StringBuffer('Artist(')
           ..write('id: $id, ')
-          ..write('title: $title')
+          ..write('value: $value')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title);
+  int get hashCode => Object.hash(id, value);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Artist && other.id == this.id && other.title == this.title);
+      (other is Artist && other.id == this.id && other.value == this.value);
 }
 
 class ArtistsCompanion extends UpdateCompanion<Artist> {
   final Value<int> id;
-  final Value<String> title;
+  final Value<String> value;
   const ArtistsCompanion({
     this.id = const Value.absent(),
-    this.title = const Value.absent(),
+    this.value = const Value.absent(),
   });
   ArtistsCompanion.insert({
     this.id = const Value.absent(),
-    this.title = const Value.absent(),
+    this.value = const Value.absent(),
   });
   static Insertable<Artist> custom({
     Expression<int>? id,
-    Expression<String>? title,
+    Expression<String>? value,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (title != null) 'title': title,
+      if (value != null) 'value': value,
     });
   }
 
-  ArtistsCompanion copyWith({Value<int>? id, Value<String>? title}) {
+  ArtistsCompanion copyWith({Value<int>? id, Value<String>? value}) {
     return ArtistsCompanion(
       id: id ?? this.id,
-      title: title ?? this.title,
+      value: value ?? this.value,
     );
   }
 
@@ -164,8 +164,8 @@ class ArtistsCompanion extends UpdateCompanion<Artist> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
     }
     return map;
   }
@@ -174,7 +174,184 @@ class ArtistsCompanion extends UpdateCompanion<Artist> {
   String toString() {
     return (StringBuffer('ArtistsCompanion(')
           ..write('id: $id, ')
-          ..write('title: $title')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CoversTable extends Covers with TableInfo<$CoversTable, Cover> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CoversTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
+      type: DriftSqlType.string,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
+      defaultValue: const Constant('branding/color-darkbg.png'));
+  @override
+  List<GeneratedColumn> get $columns => [id, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'covers';
+  @override
+  VerificationContext validateIntegrity(Insertable<Cover> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Cover map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Cover(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
+    );
+  }
+
+  @override
+  $CoversTable createAlias(String alias) {
+    return $CoversTable(attachedDatabase, alias);
+  }
+}
+
+class Cover extends DataClass implements Insertable<Cover> {
+  final int id;
+  final String value;
+  const Cover({required this.id, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  CoversCompanion toCompanion(bool nullToAbsent) {
+    return CoversCompanion(
+      id: Value(id),
+      value: Value(value),
+    );
+  }
+
+  factory Cover.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Cover(
+      id: serializer.fromJson<int>(json['id']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  Cover copyWith({int? id, String? value}) => Cover(
+        id: id ?? this.id,
+        value: value ?? this.value,
+      );
+  Cover copyWithCompanion(CoversCompanion data) {
+    return Cover(
+      id: data.id.present ? data.id.value : this.id,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Cover(')
+          ..write('id: $id, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Cover && other.id == this.id && other.value == this.value);
+}
+
+class CoversCompanion extends UpdateCompanion<Cover> {
+  final Value<int> id;
+  final Value<String> value;
+  const CoversCompanion({
+    this.id = const Value.absent(),
+    this.value = const Value.absent(),
+  });
+  CoversCompanion.insert({
+    this.id = const Value.absent(),
+    this.value = const Value.absent(),
+  });
+  static Insertable<Cover> custom({
+    Expression<int>? id,
+    Expression<String>? value,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (value != null) 'value': value,
+    });
+  }
+
+  CoversCompanion copyWith({Value<int>? id, Value<String>? value}) {
+    return CoversCompanion(
+      id: id ?? this.id,
+      value: value ?? this.value,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CoversCompanion(')
+          ..write('id: $id, ')
+          ..write('value: $value')
           ..write(')'))
         .toString();
   }
@@ -194,16 +371,16 @@ class $GenresTable extends Genres with TableInfo<$GenresTable, Genre> {
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
       defaultValue: const Constant('Misc'));
   @override
-  List<GeneratedColumn> get $columns => [id, title];
+  List<GeneratedColumn> get $columns => [id, value];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -217,9 +394,9 @@ class $GenresTable extends Genres with TableInfo<$GenresTable, Genre> {
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('title')) {
+    if (data.containsKey('value')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
     }
     return context;
   }
@@ -232,8 +409,8 @@ class $GenresTable extends Genres with TableInfo<$GenresTable, Genre> {
     return Genre(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
     );
   }
 
@@ -245,20 +422,20 @@ class $GenresTable extends Genres with TableInfo<$GenresTable, Genre> {
 
 class Genre extends DataClass implements Insertable<Genre> {
   final int id;
-  final String title;
-  const Genre({required this.id, required this.title});
+  final String value;
+  const Genre({required this.id, required this.value});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['title'] = Variable<String>(title);
+    map['value'] = Variable<String>(value);
     return map;
   }
 
   GenresCompanion toCompanion(bool nullToAbsent) {
     return GenresCompanion(
       id: Value(id),
-      title: Value(title),
+      value: Value(value),
     );
   }
 
@@ -267,7 +444,7 @@ class Genre extends DataClass implements Insertable<Genre> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Genre(
       id: serializer.fromJson<int>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
+      value: serializer.fromJson<String>(json['value']),
     );
   }
   @override
@@ -275,18 +452,18 @@ class Genre extends DataClass implements Insertable<Genre> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'title': serializer.toJson<String>(title),
+      'value': serializer.toJson<String>(value),
     };
   }
 
-  Genre copyWith({int? id, String? title}) => Genre(
+  Genre copyWith({int? id, String? value}) => Genre(
         id: id ?? this.id,
-        title: title ?? this.title,
+        value: value ?? this.value,
       );
   Genre copyWithCompanion(GenresCompanion data) {
     return Genre(
       id: data.id.present ? data.id.value : this.id,
-      title: data.title.present ? data.title.value : this.title,
+      value: data.value.present ? data.value.value : this.value,
     );
   }
 
@@ -294,44 +471,44 @@ class Genre extends DataClass implements Insertable<Genre> {
   String toString() {
     return (StringBuffer('Genre(')
           ..write('id: $id, ')
-          ..write('title: $title')
+          ..write('value: $value')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title);
+  int get hashCode => Object.hash(id, value);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Genre && other.id == this.id && other.title == this.title);
+      (other is Genre && other.id == this.id && other.value == this.value);
 }
 
 class GenresCompanion extends UpdateCompanion<Genre> {
   final Value<int> id;
-  final Value<String> title;
+  final Value<String> value;
   const GenresCompanion({
     this.id = const Value.absent(),
-    this.title = const Value.absent(),
+    this.value = const Value.absent(),
   });
   GenresCompanion.insert({
     this.id = const Value.absent(),
-    this.title = const Value.absent(),
+    this.value = const Value.absent(),
   });
   static Insertable<Genre> custom({
     Expression<int>? id,
-    Expression<String>? title,
+    Expression<String>? value,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (title != null) 'title': title,
+      if (value != null) 'value': value,
     });
   }
 
-  GenresCompanion copyWith({Value<int>? id, Value<String>? title}) {
+  GenresCompanion copyWith({Value<int>? id, Value<String>? value}) {
     return GenresCompanion(
       id: id ?? this.id,
-      title: title ?? this.title,
+      value: value ?? this.value,
     );
   }
 
@@ -341,8 +518,8 @@ class GenresCompanion extends UpdateCompanion<Genre> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
     }
     return map;
   }
@@ -351,7 +528,7 @@ class GenresCompanion extends UpdateCompanion<Genre> {
   String toString() {
     return (StringBuffer('GenresCompanion(')
           ..write('id: $id, ')
-          ..write('title: $title')
+          ..write('value: $value')
           ..write(')'))
         .toString();
   }
@@ -371,16 +548,15 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
-  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
   @override
-  late final GeneratedColumn<String> title = GeneratedColumn<String>(
-      'title', aliasedName, false,
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+      'value', aliasedName, false,
       type: DriftSqlType.string,
       requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
       defaultValue: const Constant('Unknown Album'));
   @override
-  List<GeneratedColumn> get $columns => [id, title];
+  List<GeneratedColumn> get $columns => [id, value];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -394,9 +570,9 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('title')) {
+    if (data.containsKey('value')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+          _valueMeta, value.isAcceptableOrUnknown(data['value']!, _valueMeta));
     }
     return context;
   }
@@ -409,8 +585,8 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
     return Album(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
-      title: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+      value: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}value'])!,
     );
   }
 
@@ -422,20 +598,20 @@ class $AlbumsTable extends Albums with TableInfo<$AlbumsTable, Album> {
 
 class Album extends DataClass implements Insertable<Album> {
   final int id;
-  final String title;
-  const Album({required this.id, required this.title});
+  final String value;
+  const Album({required this.id, required this.value});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
-    map['title'] = Variable<String>(title);
+    map['value'] = Variable<String>(value);
     return map;
   }
 
   AlbumsCompanion toCompanion(bool nullToAbsent) {
     return AlbumsCompanion(
       id: Value(id),
-      title: Value(title),
+      value: Value(value),
     );
   }
 
@@ -444,7 +620,7 @@ class Album extends DataClass implements Insertable<Album> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Album(
       id: serializer.fromJson<int>(json['id']),
-      title: serializer.fromJson<String>(json['title']),
+      value: serializer.fromJson<String>(json['value']),
     );
   }
   @override
@@ -452,18 +628,18 @@ class Album extends DataClass implements Insertable<Album> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
-      'title': serializer.toJson<String>(title),
+      'value': serializer.toJson<String>(value),
     };
   }
 
-  Album copyWith({int? id, String? title}) => Album(
+  Album copyWith({int? id, String? value}) => Album(
         id: id ?? this.id,
-        title: title ?? this.title,
+        value: value ?? this.value,
       );
   Album copyWithCompanion(AlbumsCompanion data) {
     return Album(
       id: data.id.present ? data.id.value : this.id,
-      title: data.title.present ? data.title.value : this.title,
+      value: data.value.present ? data.value.value : this.value,
     );
   }
 
@@ -471,44 +647,44 @@ class Album extends DataClass implements Insertable<Album> {
   String toString() {
     return (StringBuffer('Album(')
           ..write('id: $id, ')
-          ..write('title: $title')
+          ..write('value: $value')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(id, title);
+  int get hashCode => Object.hash(id, value);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Album && other.id == this.id && other.title == this.title);
+      (other is Album && other.id == this.id && other.value == this.value);
 }
 
 class AlbumsCompanion extends UpdateCompanion<Album> {
   final Value<int> id;
-  final Value<String> title;
+  final Value<String> value;
   const AlbumsCompanion({
     this.id = const Value.absent(),
-    this.title = const Value.absent(),
+    this.value = const Value.absent(),
   });
   AlbumsCompanion.insert({
     this.id = const Value.absent(),
-    this.title = const Value.absent(),
+    this.value = const Value.absent(),
   });
   static Insertable<Album> custom({
     Expression<int>? id,
-    Expression<String>? title,
+    Expression<String>? value,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (title != null) 'title': title,
+      if (value != null) 'value': value,
     });
   }
 
-  AlbumsCompanion copyWith({Value<int>? id, Value<String>? title}) {
+  AlbumsCompanion copyWith({Value<int>? id, Value<String>? value}) {
     return AlbumsCompanion(
       id: id ?? this.id,
-      title: title ?? this.title,
+      value: value ?? this.value,
     );
   }
 
@@ -518,8 +694,8 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
     if (id.present) {
       map['id'] = Variable<int>(id.value);
     }
-    if (title.present) {
-      map['title'] = Variable<String>(title.value);
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
     }
     return map;
   }
@@ -528,7 +704,7 @@ class AlbumsCompanion extends UpdateCompanion<Album> {
   String toString() {
     return (StringBuffer('AlbumsCompanion(')
           ..write('id: $id, ')
-          ..write('title: $title')
+          ..write('value: $value')
           ..write(')'))
         .toString();
   }
@@ -577,6 +753,16 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
       requiredDuringInsert: false,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
           'REFERENCES artists (id) ON DELETE SET NULL'),
+      defaultValue: const Constant(1));
+  static const VerificationMeta _coverIdMeta =
+      const VerificationMeta('coverId');
+  @override
+  late final GeneratedColumn<int> coverId = GeneratedColumn<int>(
+      'cover_id', aliasedName, true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'REFERENCES covers (id) ON DELETE SET NULL'),
       defaultValue: const Constant(1));
   static const VerificationMeta _genreIdMeta =
       const VerificationMeta('genreId');
@@ -631,6 +817,7 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
         filename,
         title,
         artistId,
+        coverId,
         genreId,
         albumId,
         durationMS,
@@ -667,6 +854,10 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
     if (data.containsKey('artist_id')) {
       context.handle(_artistIdMeta,
           artistId.isAcceptableOrUnknown(data['artist_id']!, _artistIdMeta));
+    }
+    if (data.containsKey('cover_id')) {
+      context.handle(_coverIdMeta,
+          coverId.isAcceptableOrUnknown(data['cover_id']!, _coverIdMeta));
     }
     if (data.containsKey('genre_id')) {
       context.handle(_genreIdMeta,
@@ -709,6 +900,8 @@ class $SongsTable extends Songs with TableInfo<$SongsTable, Song> {
           .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
       artistId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}artist_id']),
+      coverId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}cover_id']),
       genreId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}genre_id']),
       albumId: attachedDatabase.typeMapping
@@ -734,6 +927,7 @@ class Song extends DataClass implements Insertable<Song> {
   final String? filename;
   final String title;
   final int? artistId;
+  final int? coverId;
   final int? genreId;
   final int? albumId;
   final int durationMS;
@@ -745,6 +939,7 @@ class Song extends DataClass implements Insertable<Song> {
       this.filename,
       required this.title,
       this.artistId,
+      this.coverId,
       this.genreId,
       this.albumId,
       required this.durationMS,
@@ -761,6 +956,9 @@ class Song extends DataClass implements Insertable<Song> {
     map['title'] = Variable<String>(title);
     if (!nullToAbsent || artistId != null) {
       map['artist_id'] = Variable<int>(artistId);
+    }
+    if (!nullToAbsent || coverId != null) {
+      map['cover_id'] = Variable<int>(coverId);
     }
     if (!nullToAbsent || genreId != null) {
       map['genre_id'] = Variable<int>(genreId);
@@ -785,6 +983,9 @@ class Song extends DataClass implements Insertable<Song> {
       artistId: artistId == null && nullToAbsent
           ? const Value.absent()
           : Value(artistId),
+      coverId: coverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(coverId),
       genreId: genreId == null && nullToAbsent
           ? const Value.absent()
           : Value(genreId),
@@ -806,6 +1007,7 @@ class Song extends DataClass implements Insertable<Song> {
       filename: serializer.fromJson<String?>(json['filename']),
       title: serializer.fromJson<String>(json['title']),
       artistId: serializer.fromJson<int?>(json['artistId']),
+      coverId: serializer.fromJson<int?>(json['coverId']),
       genreId: serializer.fromJson<int?>(json['genreId']),
       albumId: serializer.fromJson<int?>(json['albumId']),
       durationMS: serializer.fromJson<int>(json['durationMS']),
@@ -822,6 +1024,7 @@ class Song extends DataClass implements Insertable<Song> {
       'filename': serializer.toJson<String?>(filename),
       'title': serializer.toJson<String>(title),
       'artistId': serializer.toJson<int?>(artistId),
+      'coverId': serializer.toJson<int?>(coverId),
       'genreId': serializer.toJson<int?>(genreId),
       'albumId': serializer.toJson<int?>(albumId),
       'durationMS': serializer.toJson<int>(durationMS),
@@ -836,6 +1039,7 @@ class Song extends DataClass implements Insertable<Song> {
           Value<String?> filename = const Value.absent(),
           String? title,
           Value<int?> artistId = const Value.absent(),
+          Value<int?> coverId = const Value.absent(),
           Value<int?> genreId = const Value.absent(),
           Value<int?> albumId = const Value.absent(),
           int? durationMS,
@@ -847,6 +1051,7 @@ class Song extends DataClass implements Insertable<Song> {
         filename: filename.present ? filename.value : this.filename,
         title: title ?? this.title,
         artistId: artistId.present ? artistId.value : this.artistId,
+        coverId: coverId.present ? coverId.value : this.coverId,
         genreId: genreId.present ? genreId.value : this.genreId,
         albumId: albumId.present ? albumId.value : this.albumId,
         durationMS: durationMS ?? this.durationMS,
@@ -860,6 +1065,7 @@ class Song extends DataClass implements Insertable<Song> {
       filename: data.filename.present ? data.filename.value : this.filename,
       title: data.title.present ? data.title.value : this.title,
       artistId: data.artistId.present ? data.artistId.value : this.artistId,
+      coverId: data.coverId.present ? data.coverId.value : this.coverId,
       genreId: data.genreId.present ? data.genreId.value : this.genreId,
       albumId: data.albumId.present ? data.albumId.value : this.albumId,
       durationMS:
@@ -877,6 +1083,7 @@ class Song extends DataClass implements Insertable<Song> {
           ..write('filename: $filename, ')
           ..write('title: $title, ')
           ..write('artistId: $artistId, ')
+          ..write('coverId: $coverId, ')
           ..write('genreId: $genreId, ')
           ..write('albumId: $albumId, ')
           ..write('durationMS: $durationMS, ')
@@ -887,8 +1094,8 @@ class Song extends DataClass implements Insertable<Song> {
   }
 
   @override
-  int get hashCode => Object.hash(id, path, filename, title, artistId, genreId,
-      albumId, durationMS, favorite, addedAt);
+  int get hashCode => Object.hash(id, path, filename, title, artistId, coverId,
+      genreId, albumId, durationMS, favorite, addedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -898,6 +1105,7 @@ class Song extends DataClass implements Insertable<Song> {
           other.filename == this.filename &&
           other.title == this.title &&
           other.artistId == this.artistId &&
+          other.coverId == this.coverId &&
           other.genreId == this.genreId &&
           other.albumId == this.albumId &&
           other.durationMS == this.durationMS &&
@@ -911,6 +1119,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
   final Value<String?> filename;
   final Value<String> title;
   final Value<int?> artistId;
+  final Value<int?> coverId;
   final Value<int?> genreId;
   final Value<int?> albumId;
   final Value<int> durationMS;
@@ -922,6 +1131,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.filename = const Value.absent(),
     this.title = const Value.absent(),
     this.artistId = const Value.absent(),
+    this.coverId = const Value.absent(),
     this.genreId = const Value.absent(),
     this.albumId = const Value.absent(),
     this.durationMS = const Value.absent(),
@@ -934,6 +1144,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     this.filename = const Value.absent(),
     this.title = const Value.absent(),
     this.artistId = const Value.absent(),
+    this.coverId = const Value.absent(),
     this.genreId = const Value.absent(),
     this.albumId = const Value.absent(),
     this.durationMS = const Value.absent(),
@@ -946,6 +1157,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
     Expression<String>? filename,
     Expression<String>? title,
     Expression<int>? artistId,
+    Expression<int>? coverId,
     Expression<int>? genreId,
     Expression<int>? albumId,
     Expression<int>? durationMS,
@@ -958,6 +1170,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       if (filename != null) 'filename': filename,
       if (title != null) 'title': title,
       if (artistId != null) 'artist_id': artistId,
+      if (coverId != null) 'cover_id': coverId,
       if (genreId != null) 'genre_id': genreId,
       if (albumId != null) 'album_id': albumId,
       if (durationMS != null) 'duration_m_s': durationMS,
@@ -972,6 +1185,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       Value<String?>? filename,
       Value<String>? title,
       Value<int?>? artistId,
+      Value<int?>? coverId,
       Value<int?>? genreId,
       Value<int?>? albumId,
       Value<int>? durationMS,
@@ -983,6 +1197,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
       filename: filename ?? this.filename,
       title: title ?? this.title,
       artistId: artistId ?? this.artistId,
+      coverId: coverId ?? this.coverId,
       genreId: genreId ?? this.genreId,
       albumId: albumId ?? this.albumId,
       durationMS: durationMS ?? this.durationMS,
@@ -1008,6 +1223,9 @@ class SongsCompanion extends UpdateCompanion<Song> {
     }
     if (artistId.present) {
       map['artist_id'] = Variable<int>(artistId.value);
+    }
+    if (coverId.present) {
+      map['cover_id'] = Variable<int>(coverId.value);
     }
     if (genreId.present) {
       map['genre_id'] = Variable<int>(genreId.value);
@@ -1035,6 +1253,7 @@ class SongsCompanion extends UpdateCompanion<Song> {
           ..write('filename: $filename, ')
           ..write('title: $title, ')
           ..write('artistId: $artistId, ')
+          ..write('coverId: $coverId, ')
           ..write('genreId: $genreId, ')
           ..write('albumId: $albumId, ')
           ..write('durationMS: $durationMS, ')
@@ -1548,6 +1767,7 @@ abstract class _$Music extends GeneratedDatabase {
   _$Music(QueryExecutor e) : super(e);
   $MusicManager get managers => $MusicManager(this);
   late final $ArtistsTable artists = $ArtistsTable(this);
+  late final $CoversTable covers = $CoversTable(this);
   late final $GenresTable genres = $GenresTable(this);
   late final $AlbumsTable albums = $AlbumsTable(this);
   late final $SongsTable songs = $SongsTable(this);
@@ -1558,12 +1778,19 @@ abstract class _$Music extends GeneratedDatabase {
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [artists, genres, albums, songs, playlists, playlistSongs];
+      [artists, covers, genres, albums, songs, playlists, playlistSongs];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
         [
           WritePropagation(
             on: TableUpdateQuery.onTableName('artists',
+                limitUpdateKind: UpdateKind.delete),
+            result: [
+              TableUpdate('songs', kind: UpdateKind.update),
+            ],
+          ),
+          WritePropagation(
+            on: TableUpdateQuery.onTableName('covers',
                 limitUpdateKind: UpdateKind.delete),
             result: [
               TableUpdate('songs', kind: UpdateKind.update),
@@ -1603,11 +1830,11 @@ abstract class _$Music extends GeneratedDatabase {
 
 typedef $$ArtistsTableCreateCompanionBuilder = ArtistsCompanion Function({
   Value<int> id,
-  Value<String> title,
+  Value<String> value,
 });
 typedef $$ArtistsTableUpdateCompanionBuilder = ArtistsCompanion Function({
   Value<int> id,
-  Value<String> title,
+  Value<String> value,
 });
 
 final class $$ArtistsTableReferences
@@ -1640,8 +1867,8 @@ class $$ArtistsTableFilterComposer extends Composer<_$Music, $ArtistsTable> {
   ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnFilters(column));
 
   Expression<bool> songsRefs(
       Expression<bool> Function($$SongsTableFilterComposer f) f) {
@@ -1676,8 +1903,8 @@ class $$ArtistsTableOrderingComposer extends Composer<_$Music, $ArtistsTable> {
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
 }
 
 class $$ArtistsTableAnnotationComposer
@@ -1692,8 +1919,8 @@ class $$ArtistsTableAnnotationComposer
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
 
   Expression<T> songsRefs<T extends Object>(
       Expression<T> Function($$SongsTableAnnotationComposer a) f) {
@@ -1741,19 +1968,19 @@ class $$ArtistsTableTableManager extends RootTableManager<
               $$ArtistsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<String> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
           }) =>
               ArtistsCompanion(
             id: id,
-            title: title,
+            value: value,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<String> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
           }) =>
               ArtistsCompanion.insert(
             id: id,
-            title: title,
+            value: value,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>
@@ -1796,13 +2023,207 @@ typedef $$ArtistsTableProcessedTableManager = ProcessedTableManager<
     (Artist, $$ArtistsTableReferences),
     Artist,
     PrefetchHooks Function({bool songsRefs})>;
+typedef $$CoversTableCreateCompanionBuilder = CoversCompanion Function({
+  Value<int> id,
+  Value<String> value,
+});
+typedef $$CoversTableUpdateCompanionBuilder = CoversCompanion Function({
+  Value<int> id,
+  Value<String> value,
+});
+
+final class $$CoversTableReferences
+    extends BaseReferences<_$Music, $CoversTable, Cover> {
+  $$CoversTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static MultiTypedResultKey<$SongsTable, List<Song>> _songsRefsTable(
+          _$Music db) =>
+      MultiTypedResultKey.fromTable(db.songs,
+          aliasName: $_aliasNameGenerator(db.covers.id, db.songs.coverId));
+
+  $$SongsTableProcessedTableManager get songsRefs {
+    final manager = $$SongsTableTableManager($_db, $_db.songs)
+        .filter((f) => f.coverId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_songsRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+}
+
+class $$CoversTableFilterComposer extends Composer<_$Music, $CoversTable> {
+  $$CoversTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnFilters(column));
+
+  Expression<bool> songsRefs(
+      Expression<bool> Function($$SongsTableFilterComposer f) f) {
+    final $$SongsTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.songs,
+        getReferencedColumn: (t) => t.coverId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SongsTableFilterComposer(
+              $db: $db,
+              $table: $db.songs,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$CoversTableOrderingComposer extends Composer<_$Music, $CoversTable> {
+  $$CoversTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CoversTableAnnotationComposer extends Composer<_$Music, $CoversTable> {
+  $$CoversTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+
+  Expression<T> songsRefs<T extends Object>(
+      Expression<T> Function($$SongsTableAnnotationComposer a) f) {
+    final $$SongsTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.songs,
+        getReferencedColumn: (t) => t.coverId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$SongsTableAnnotationComposer(
+              $db: $db,
+              $table: $db.songs,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+}
+
+class $$CoversTableTableManager extends RootTableManager<
+    _$Music,
+    $CoversTable,
+    Cover,
+    $$CoversTableFilterComposer,
+    $$CoversTableOrderingComposer,
+    $$CoversTableAnnotationComposer,
+    $$CoversTableCreateCompanionBuilder,
+    $$CoversTableUpdateCompanionBuilder,
+    (Cover, $$CoversTableReferences),
+    Cover,
+    PrefetchHooks Function({bool songsRefs})> {
+  $$CoversTableTableManager(_$Music db, $CoversTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CoversTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CoversTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CoversTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> value = const Value.absent(),
+          }) =>
+              CoversCompanion(
+            id: id,
+            value: value,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<String> value = const Value.absent(),
+          }) =>
+              CoversCompanion.insert(
+            id: id,
+            value: value,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) =>
+                  (e.readTable(table), $$CoversTableReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: ({songsRefs = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [if (songsRefs) db.songs],
+              addJoins: null,
+              getPrefetchedDataCallback: (items) async {
+                return [
+                  if (songsRefs)
+                    await $_getPrefetchedData<Cover, $CoversTable, Song>(
+                        currentTable: table,
+                        referencedTable:
+                            $$CoversTableReferences._songsRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$CoversTableReferences(db, table, p0).songsRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.coverId == item.id),
+                        typedResults: items)
+                ];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$CoversTableProcessedTableManager = ProcessedTableManager<
+    _$Music,
+    $CoversTable,
+    Cover,
+    $$CoversTableFilterComposer,
+    $$CoversTableOrderingComposer,
+    $$CoversTableAnnotationComposer,
+    $$CoversTableCreateCompanionBuilder,
+    $$CoversTableUpdateCompanionBuilder,
+    (Cover, $$CoversTableReferences),
+    Cover,
+    PrefetchHooks Function({bool songsRefs})>;
 typedef $$GenresTableCreateCompanionBuilder = GenresCompanion Function({
   Value<int> id,
-  Value<String> title,
+  Value<String> value,
 });
 typedef $$GenresTableUpdateCompanionBuilder = GenresCompanion Function({
   Value<int> id,
-  Value<String> title,
+  Value<String> value,
 });
 
 final class $$GenresTableReferences
@@ -1835,8 +2256,8 @@ class $$GenresTableFilterComposer extends Composer<_$Music, $GenresTable> {
   ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnFilters(column));
 
   Expression<bool> songsRefs(
       Expression<bool> Function($$SongsTableFilterComposer f) f) {
@@ -1871,8 +2292,8 @@ class $$GenresTableOrderingComposer extends Composer<_$Music, $GenresTable> {
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
 }
 
 class $$GenresTableAnnotationComposer extends Composer<_$Music, $GenresTable> {
@@ -1886,8 +2307,8 @@ class $$GenresTableAnnotationComposer extends Composer<_$Music, $GenresTable> {
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
 
   Expression<T> songsRefs<T extends Object>(
       Expression<T> Function($$SongsTableAnnotationComposer a) f) {
@@ -1935,19 +2356,19 @@ class $$GenresTableTableManager extends RootTableManager<
               $$GenresTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<String> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
           }) =>
               GenresCompanion(
             id: id,
-            title: title,
+            value: value,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<String> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
           }) =>
               GenresCompanion.insert(
             id: id,
-            title: title,
+            value: value,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>
@@ -1992,11 +2413,11 @@ typedef $$GenresTableProcessedTableManager = ProcessedTableManager<
     PrefetchHooks Function({bool songsRefs})>;
 typedef $$AlbumsTableCreateCompanionBuilder = AlbumsCompanion Function({
   Value<int> id,
-  Value<String> title,
+  Value<String> value,
 });
 typedef $$AlbumsTableUpdateCompanionBuilder = AlbumsCompanion Function({
   Value<int> id,
-  Value<String> title,
+  Value<String> value,
 });
 
 final class $$AlbumsTableReferences
@@ -2029,8 +2450,8 @@ class $$AlbumsTableFilterComposer extends Composer<_$Music, $AlbumsTable> {
   ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnFilters(column));
 
   Expression<bool> songsRefs(
       Expression<bool> Function($$SongsTableFilterComposer f) f) {
@@ -2065,8 +2486,8 @@ class $$AlbumsTableOrderingComposer extends Composer<_$Music, $AlbumsTable> {
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get title => $composableBuilder(
-      column: $table.title, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get value => $composableBuilder(
+      column: $table.value, builder: (column) => ColumnOrderings(column));
 }
 
 class $$AlbumsTableAnnotationComposer extends Composer<_$Music, $AlbumsTable> {
@@ -2080,8 +2501,8 @@ class $$AlbumsTableAnnotationComposer extends Composer<_$Music, $AlbumsTable> {
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
 
-  GeneratedColumn<String> get title =>
-      $composableBuilder(column: $table.title, builder: (column) => column);
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
 
   Expression<T> songsRefs<T extends Object>(
       Expression<T> Function($$SongsTableAnnotationComposer a) f) {
@@ -2129,19 +2550,19 @@ class $$AlbumsTableTableManager extends RootTableManager<
               $$AlbumsTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<String> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
           }) =>
               AlbumsCompanion(
             id: id,
-            title: title,
+            value: value,
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
-            Value<String> title = const Value.absent(),
+            Value<String> value = const Value.absent(),
           }) =>
               AlbumsCompanion.insert(
             id: id,
-            title: title,
+            value: value,
           ),
           withReferenceMapper: (p0) => p0
               .map((e) =>
@@ -2190,6 +2611,7 @@ typedef $$SongsTableCreateCompanionBuilder = SongsCompanion Function({
   Value<String?> filename,
   Value<String> title,
   Value<int?> artistId,
+  Value<int?> coverId,
   Value<int?> genreId,
   Value<int?> albumId,
   Value<int> durationMS,
@@ -2202,6 +2624,7 @@ typedef $$SongsTableUpdateCompanionBuilder = SongsCompanion Function({
   Value<String?> filename,
   Value<String> title,
   Value<int?> artistId,
+  Value<int?> coverId,
   Value<int?> genreId,
   Value<int?> albumId,
   Value<int> durationMS,
@@ -2222,6 +2645,20 @@ final class $$SongsTableReferences
     final manager = $$ArtistsTableTableManager($_db, $_db.artists)
         .filter((f) => f.id.sqlEquals($_column));
     final item = $_typedResult.readTableOrNull(_artistIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+
+  static $CoversTable _coverIdTable(_$Music db) => db.covers
+      .createAlias($_aliasNameGenerator(db.songs.coverId, db.covers.id));
+
+  $$CoversTableProcessedTableManager? get coverId {
+    final $_column = $_itemColumn<int>('cover_id');
+    if ($_column == null) return null;
+    final manager = $$CoversTableTableManager($_db, $_db.covers)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_coverIdTable($_db));
     if (item == null) return manager;
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: [item]));
@@ -2312,6 +2749,26 @@ class $$SongsTableFilterComposer extends Composer<_$Music, $SongsTable> {
             $$ArtistsTableFilterComposer(
               $db: $db,
               $table: $db.artists,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
+  $$CoversTableFilterComposer get coverId {
+    final $$CoversTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.coverId,
+        referencedTable: $db.covers,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CoversTableFilterComposer(
+              $db: $db,
+              $table: $db.covers,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -2431,6 +2888,26 @@ class $$SongsTableOrderingComposer extends Composer<_$Music, $SongsTable> {
     return composer;
   }
 
+  $$CoversTableOrderingComposer get coverId {
+    final $$CoversTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.coverId,
+        referencedTable: $db.covers,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CoversTableOrderingComposer(
+              $db: $db,
+              $table: $db.covers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
   $$GenresTableOrderingComposer get genreId {
     final $$GenresTableOrderingComposer composer = $composerBuilder(
         composer: this,
@@ -2521,6 +2998,26 @@ class $$SongsTableAnnotationComposer extends Composer<_$Music, $SongsTable> {
     return composer;
   }
 
+  $$CoversTableAnnotationComposer get coverId {
+    final $$CoversTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.coverId,
+        referencedTable: $db.covers,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$CoversTableAnnotationComposer(
+              $db: $db,
+              $table: $db.covers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+
   $$GenresTableAnnotationComposer get genreId {
     final $$GenresTableAnnotationComposer composer = $composerBuilder(
         composer: this,
@@ -2595,7 +3092,11 @@ class $$SongsTableTableManager extends RootTableManager<
     (Song, $$SongsTableReferences),
     Song,
     PrefetchHooks Function(
-        {bool artistId, bool genreId, bool albumId, bool playlistSongsRefs})> {
+        {bool artistId,
+        bool coverId,
+        bool genreId,
+        bool albumId,
+        bool playlistSongsRefs})> {
   $$SongsTableTableManager(_$Music db, $SongsTable table)
       : super(TableManagerState(
           db: db,
@@ -2612,6 +3113,7 @@ class $$SongsTableTableManager extends RootTableManager<
             Value<String?> filename = const Value.absent(),
             Value<String> title = const Value.absent(),
             Value<int?> artistId = const Value.absent(),
+            Value<int?> coverId = const Value.absent(),
             Value<int?> genreId = const Value.absent(),
             Value<int?> albumId = const Value.absent(),
             Value<int> durationMS = const Value.absent(),
@@ -2624,6 +3126,7 @@ class $$SongsTableTableManager extends RootTableManager<
             filename: filename,
             title: title,
             artistId: artistId,
+            coverId: coverId,
             genreId: genreId,
             albumId: albumId,
             durationMS: durationMS,
@@ -2636,6 +3139,7 @@ class $$SongsTableTableManager extends RootTableManager<
             Value<String?> filename = const Value.absent(),
             Value<String> title = const Value.absent(),
             Value<int?> artistId = const Value.absent(),
+            Value<int?> coverId = const Value.absent(),
             Value<int?> genreId = const Value.absent(),
             Value<int?> albumId = const Value.absent(),
             Value<int> durationMS = const Value.absent(),
@@ -2648,6 +3152,7 @@ class $$SongsTableTableManager extends RootTableManager<
             filename: filename,
             title: title,
             artistId: artistId,
+            coverId: coverId,
             genreId: genreId,
             albumId: albumId,
             durationMS: durationMS,
@@ -2660,6 +3165,7 @@ class $$SongsTableTableManager extends RootTableManager<
               .toList(),
           prefetchHooksCallback: (
               {artistId = false,
+              coverId = false,
               genreId = false,
               albumId = false,
               playlistSongsRefs = false}) {
@@ -2688,6 +3194,15 @@ class $$SongsTableTableManager extends RootTableManager<
                     referencedTable: $$SongsTableReferences._artistIdTable(db),
                     referencedColumn:
                         $$SongsTableReferences._artistIdTable(db).id,
+                  ) as T;
+                }
+                if (coverId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.coverId,
+                    referencedTable: $$SongsTableReferences._coverIdTable(db),
+                    referencedColumn:
+                        $$SongsTableReferences._coverIdTable(db).id,
                   ) as T;
                 }
                 if (genreId) {
@@ -2744,7 +3259,11 @@ typedef $$SongsTableProcessedTableManager = ProcessedTableManager<
     (Song, $$SongsTableReferences),
     Song,
     PrefetchHooks Function(
-        {bool artistId, bool genreId, bool albumId, bool playlistSongsRefs})>;
+        {bool artistId,
+        bool coverId,
+        bool genreId,
+        bool albumId,
+        bool playlistSongsRefs})>;
 typedef $$PlaylistsTableCreateCompanionBuilder = PlaylistsCompanion Function({
   Value<int> id,
   required String title,
@@ -3307,6 +3826,8 @@ class $MusicManager {
   $MusicManager(this._db);
   $$ArtistsTableTableManager get artists =>
       $$ArtistsTableTableManager(_db, _db.artists);
+  $$CoversTableTableManager get covers =>
+      $$CoversTableTableManager(_db, _db.covers);
   $$GenresTableTableManager get genres =>
       $$GenresTableTableManager(_db, _db.genres);
   $$AlbumsTableTableManager get albums =>

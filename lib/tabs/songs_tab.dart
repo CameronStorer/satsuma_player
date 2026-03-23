@@ -31,7 +31,10 @@ class _SongsTabState extends State<SongsTab> {
       length: 3,
       // SCAFFOLD
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
+          backgroundColor: Color.lerp(Color.fromARGB(155, 0, 0, 0),const Color.fromARGB(255, 49, 3, 158),0.15),
+          elevation:0,
           toolbarHeight: 0,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(70),
@@ -46,7 +49,7 @@ class _SongsTabState extends State<SongsTab> {
                       children: [
                         const Padding(
                           padding: EdgeInsets.all(16.0),
-                          child: Text('Your Songs', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                          child: Text('Your Songs', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),),
                         ),
                       ],
                     ),
@@ -54,10 +57,6 @@ class _SongsTabState extends State<SongsTab> {
                     Row(
                       // padding: const EdgeInsets.symmetric(horizontal: 2),
                       children: [
-                        TextButton(
-                          onPressed: () {},
-                          child: Column(children: [Icon(Icons.scanner), Text('Rescan')]),
-                        ),
                         TextButton(
                           onPressed: () {},
                           child: Column(children: [Icon(Icons.search), Text('Search')]),
@@ -98,20 +97,41 @@ class _SongsTabState extends State<SongsTab> {
                 if (songList.isEmpty) {
                   return const Center(child: Text('No songs found. Start scanning!'));
                 }
-
                 // the 'success' UI
                 return ListView.builder(
                   itemCount: songList.length,
                   itemBuilder: (context, index) {
                     final song = songList[index];
                     return ListTile(
+                      leading: 
+                        Image.asset(AudioManager.coverLookup[song.coverId] ?? 'branding/neon.png',
+                        width: 50,
+                        height: 50,
+                        fit: BoxFit.cover,
+                      ),
                       title: Text(song.title),
-                      // subtitle: Text(song.artist ?? 'Unknown'),
                       subtitle: Text(AudioManager.artistLookup[song.artistId] ?? 'Unknown Artist'),
                       onTap: () => AudioManager.playMedia(song),
                     );
                   },
                 );
+                // return ListView.builder(
+                //   itemCount: songList.length,
+                //   itemBuilder: (context, index) {
+                //     final song = songList[index];
+                //     return 
+                //     // Row( children: [
+                //         // Image(image: AssetImage(AudioManager.coverLookup[song.coverId] ?? 'brand\\color-darkbg.png'),),
+                //         ListTile(
+                //           title: Text(song.title),
+                //           // subtitle: Text(song.artist ?? 'Unknown'),
+                //           subtitle: Text(AudioManager.artistLookup[song.artistId] ?? 'Unknown Artist'),
+                //           onTap: () => AudioManager.playMedia(song),
+                //       //   )
+                //       // ]
+                //     );
+                //   },
+                // );
               },
             )
           ),

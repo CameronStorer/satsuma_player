@@ -21,6 +21,8 @@ class Songs extends Table {
   TextColumn get title => text().withDefault(const Constant('Unknown Title'))();
   IntColumn get artistId => integer().nullable().withDefault(const Constant(1))
                             .references(Artists, #id, onDelete: KeyAction.setNull)();
+  IntColumn get coverId => integer().nullable().withDefault(const Constant(1))
+                            .references(Covers, #id, onDelete: KeyAction.setNull)();
   IntColumn get genreId => integer().nullable().withDefault(const Constant(1))
                             .references(Genres, #id, onDelete: KeyAction.setNull)();
   IntColumn get albumId => integer().nullable().withDefault(const Constant(1))
@@ -50,32 +52,40 @@ class PlaylistSongs extends Table {
   Set<Column> get primaryKey => {playlistId, songId};
 }
 
+// coverPath Table
+class Covers extends Table {
+  // id
+  IntColumn get id => integer().autoIncrement()();
+  // path ot cover art
+  TextColumn get value => text().unique().withDefault(const Constant('branding/color-darkbg.png'))();
+}
+
 // Artists Table
 class Artists extends Table {
   // id
   IntColumn get id => integer().autoIncrement()();
-  // Link to the Song
-  TextColumn get title => text().unique().withDefault(const Constant('Unknown Artist'))();
+  // default artist
+  TextColumn get value => text().unique().withDefault(const Constant('Unknown Artist'))();
 }
 
 // Genres Table
 class Genres extends Table {
   // id
   IntColumn get id => integer().autoIncrement()();
-  // Link to the Song
-  TextColumn get title => text().unique().withDefault(const Constant('Misc'))();
+  // default genre
+  TextColumn get value => text().unique().withDefault(const Constant('Misc'))();
 }
 
 // Albums Table
 class Albums extends Table {
   // id
   IntColumn get id => integer().autoIncrement()();
-  // Link to the Song
-  TextColumn get title => text().unique().withDefault(const Constant('Unknown Album'))();
+  // default albums
+  TextColumn get value => text().withDefault(const Constant('Unknown Album'))();
 }
 
 // Define the Music db. Constructor opens database upon Music object initialization.
-@DriftDatabase(tables: [Songs, Playlists, PlaylistSongs, Artists, Genres, Albums])
+@DriftDatabase(tables: [Songs, Playlists, PlaylistSongs, Covers, Artists, Genres, Albums])
 class Music extends _$Music {
   Music() : super(_openConnection());
 
@@ -91,9 +101,10 @@ MigrationStrategy get migration {
 
       // SEED THE 'UNKNOWN'
       // use OR IGNORE so it only runs the very first time the app is opened
-        await customStatement('INSERT OR IGNORE INTO artists (id, title) VALUES (1, \'Unknown Artist\')');
-        await customStatement('INSERT OR IGNORE INTO genres (id, title) VALUES (1, \'Misc\')');
-        await customStatement('INSERT OR IGNORE INTO albums (id, title) VALUES (1, \'Unknown Album\')');
+        await customStatement('INSERT OR IGNORE INTO covers (id, value) VALUES (1, \'branding/color-darkbg.png\')');
+        await customStatement('INSERT OR IGNORE INTO artists (id, value) VALUES (1, \'Unknown Artist\')');
+        await customStatement('INSERT OR IGNORE INTO genres (id, value) VALUES (1, \'Misc\')');
+        await customStatement('INSERT OR IGNORE INTO albums (id, value) VALUES (1, \'Unknown Album\')');
     },
   );
 }
@@ -105,7 +116,7 @@ MigrationStrategy get migration {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     // This creates a local file in your project folder
-    final file = File('db.sqlite1'); 
+    final file = File('db.sqlite4'); 
     return NativeDatabase(file);
   });
 }

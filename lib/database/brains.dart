@@ -21,11 +21,11 @@ Future<D?> getById<T extends Table, D>(TableInfo<T, D> table, int id) {
   return (db.select(table)..where(
     (tbl) => (tbl as dynamic).id.equals(id))).getSingleOrNull();
 }
-// READ BY TITLE
-Future<D?> getByTitle<T extends Table, D>(TableInfo<T, D> table, String title) {
+// READ BY VALUE
+Future<D?> getByValue<T extends Table, D>(TableInfo<T, D> table, String value) {
   // We cast to dynamic so we can access the .id column generically
   return (db.select(table)..where(
-    (tbl) => (tbl as dynamic).title.equals(title))).getSingleOrNull();
+    (tbl) => (tbl as dynamic).value.equals(value))).getSingleOrNull();
 }
 // UPDATE
 // D is the Data Class (Song), C is the Companion (SongsCompanion)
@@ -67,6 +67,11 @@ Future<bool> songExists(String path) async {
 Stream<List<Song>> watchAllSongs() => db.select(db.songs).watch();
 // KEEP A ONE-TIME 'GET' FOR BACKGROUND LOGIC/PROCESSING
 Future<List<Song>> getAllSongs() => db.select(db.songs).get();
+
+// Use a Stream for the UI so the playlist list is always "Live"
+Stream<List<Playlist>> watchAllPlaylists() => (db.select(db.playlists).watch());
+// KEEP A ONE-TIME 'GET' FOR BACKGROUND LOGIC/PROCESSING
+Future<List<Playlist>> getAllPlaylists() => db.select(db.playlists).get();
 
 // SORT THE SONGS TABLE BY ATTRIBUTE (GENERIC SORTING FUNCTION)
 Future<List<Song>> sortSongs(Expression<Object> Function(Songs) sorter, {bool descending = false}) {
