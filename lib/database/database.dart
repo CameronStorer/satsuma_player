@@ -116,7 +116,7 @@ MigrationStrategy get migration {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     // This creates a local file in your project folder
-    final file = File('db.sqlite4'); 
+    final file = File('db.sqlite1'); 
     return NativeDatabase(file);
   });
 }
