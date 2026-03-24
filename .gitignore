@@ -33,7 +33,8 @@ migrate_working_dir/
 .pub/
 /build/
 /coverage/
-/assets/covers/
+/assets/covers/*.png
+/assets/covers/*.jpg
 *.sqlite
 
 # Symbolication related
