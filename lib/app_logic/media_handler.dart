@@ -5,15 +5,38 @@ import 'dart:io';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:media_scanner/media_scanner.dart'; // for scanning media
+// import 'package:media_scanner/media_scanner.dart'; // for scanning media
 import 'package:metadata_god/metadata_god.dart';   // for finding song meta data
 import 'package:drift/drift.dart';
 ////////// DATABASE IMPORTS
 import 'package:satsuma_player/database/database.dart';
 import 'package:satsuma_player/database/brains.dart';
+import 'package:flutter/foundation.dart';
 ////////// AUDIO PLAYBACK IMPORT
 import 'package:just_audio/just_audio.dart';
 import 'package:sqlite3/sqlite3.dart'; // audio handling
+import 'package:device_info_plus/device_info_plus.dart';
+
+Future<void> pruneDeletedSongs() async {
+  final songs = await getAllSongs();
+  
+  // Check all files in parallel instead of one by one
+  final toDelete = await Future.wait(
+    songs.map((song) async {
+      final exists = await File(song.path).exists();
+      return exists ? null : song.id;
+    }),
+  );
+
+  // Batch delete all missing songs at once
+  final ids = toDelete.whereType<int>().toList();
+  if (ids.isNotEmpty) {
+    for (int id in ids) {
+      await deleteById(db.songs, id);
+    }
+  }
+}
+
 
 
 ////////// AUDIOMANAGER CLASS /////////////////////////////////
@@ -23,6 +46,7 @@ class AudioManager {
     initialize();
     requestStoragePermission();
     refreshLookUpTables();
+    pruneDeletedSongs();
     scanForMedia();
   }
 
@@ -41,8 +65,8 @@ class AudioManager {
   final Map<String, int> _albumCache = {};
   final Map<String, int> _genreCache = {};
   static Map<int, String> artistLookup = {};
-  static Map<int, String> coverLookup = {};
-
+  // important that this is a value notifier so that the images properly display
+  static ValueNotifier<Map<int, String>> coverLookup = ValueNotifier({});
   // ensure that the AudioManager can initialize itself and keep track of music
   void initialize() {
     print("initializing");
@@ -97,15 +121,21 @@ class AudioManager {
   Future<bool> requestStoragePermission() async {
     // if on android
     if (Platform.isAndroid) {
-      // get storage status
-      var status = await Permission.storage.status;
-      // if not given permission, request it
-      if (!status.isGranted) {
-        status = await Permission.storage.request();
+      final androidInfo = await DeviceInfoPlugin().androidInfo;
+
+      if (androidInfo.version.sdkInt >= 33) {
+        // Android 13+ — only need audio permission for music dir
+        var status = await Permission.audio.status;
+        if (!status.isGranted) {
+          status = await Permission.audio.request();
+        }
+      } else {
+        // Android 12 and below
+        var status = await Permission.storage.status;
+        if (!status.isGranted) {
+          status = await Permission.storage.request();
+        }
       }
-      // return permission status
-      if (!status.isGranted){ print("Storage permissions denied...");}
-      return status.isGranted;
     }
     return false;
   }
@@ -189,7 +219,7 @@ class AudioManager {
     artistLookup = {for (var a in artists) a.id: a.value};
     // set cover
     final covers = await db.select(db.covers).get();
-    coverLookup = {for (var c in covers) c.id: c.value};
+    coverLookup.value = {for (var c in covers) c.id: c.value};
 
     return;
   }
@@ -209,7 +239,7 @@ class AudioManager {
     String album = parentFolderName;
     String genre = "Misc";
     // Link to a sidecar image if it exists even if we can't read the MP3
-    String coverPath = "branding/color-darkbg.png";
+    String coverPath = "assets/branding/color-darkbg.png";
     int durationMS = 0;
 
     // try fancy method of collecting all info
@@ -219,7 +249,7 @@ class AudioManager {
 
       // ATTEMPT TO FILL ALL SONG TABLE ATTRIBUTES FOR EACH SONG
       if (metadata.title?.isNotEmpty == true){ title = metadata.title!; }
-      if (metadata.artist?.isNotEmpty == true){ artist = metadata.artist!; }      
+      if (metadata.artist?.isNotEmpty == true){ artist = metadata.artist!; }
       if (metadata.picture != null){ coverPath = (await findArtwork(file, metadata.picture?.data, imageKey))!; }
       // Execute lookups using the cache    
       if (metadata.album?.isNotEmpty == true){ album = metadata.album!; }
@@ -255,12 +285,6 @@ class AudioManager {
   Future<List<Song>> scanForMedia() async {
     // set var dir = media directory
     final dir = await getMediaDir();
-
-    // first scan files from android storage if allowed
-    if (Platform.isAndroid) {
-      requestStoragePermission();
-      await MediaScanner.loadMedia(path: dir.toString());
-    }
 
     // get all existing paths
     final existingPaths = await (db.selectOnly(db.songs)..addColumns([db.songs.path]))
@@ -414,23 +438,4 @@ class AudioManager {
 
   // clean up when widget is disposed
   void dispose() => audioPlayer.dispose();
-}
-
-////////// PLAYLIST MANIPULATION //////////////////////////////
-// create playlist
-void createPlaylist(String title) async {
-  await insert(db.playlists, PlaylistsCompanion(title: Value(title)));
-  print("Playlist created: $title");
-}
-// delte playlist
-void deletePlaylist(int id) async {
-  deleteById(db.playlists, id);
-  // await (db.delete(db.playlists)..where((tbl)=>tbl.title.equals(title))).go();
-  print("Playlist deleted: $id");
-}
-// add song to playlist
-void addSongToPlaylist(int playlistId, int songId) async {
-  await insert(db.playlistSongs, PlaylistSongsCompanion(playlistId: Value(playlistId), songId: Value(songId)));
-  print("Song added to playlist: $playlistId");
-
 }

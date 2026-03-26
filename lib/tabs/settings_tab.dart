@@ -71,15 +71,15 @@ class _SettingsTabState extends State<SettingsTab> {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Change App Icon', style: TextStyle(fontSize:16),textAlign: TextAlign.left),
                 Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly,  children: [
                   IconButton(onPressed: (){}, icon:  
-                  Image.asset("branding/color-darkbg.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "darkBg"),
+                  Image.asset("assets/branding/color-darkbg.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "darkBg"),
                   IconButton(onPressed: (){}, icon:
-                  Image.asset("branding/color-lightbg.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "lightBg"),
+                  Image.asset("assets/branding/color-lightbg.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "lightBg"),
                   IconButton(onPressed: (){}, icon:
-                  Image.asset("branding/neon-effects.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "neon"),
+                  Image.asset("assets/branding/neon-effects.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "neon"),
                   IconButton(onPressed: (){}, icon:
-                  Image.asset("branding/mono-white-orangebg.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "gradient"),
+                  Image.asset("assets/branding/mono-white-orangebg.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "gradient"),
                   IconButton(onPressed: (){}, icon:
-                  Image.asset("branding/mobile_icon_old.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "classic"),
+                  Image.asset("assets/branding/mobile_icon_old.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "classic"),
                 ]),
               ],),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Change Music Scanning Directory', style: TextStyle(fontSize:16),textAlign: TextAlign.left),

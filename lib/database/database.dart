@@ -8,6 +8,8 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'dart:io';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 
 // generated 'sql' database
 part 'database.g.dart'; 
@@ -57,7 +59,7 @@ class Covers extends Table {
   // id
   IntColumn get id => integer().autoIncrement()();
   // path ot cover art
-  TextColumn get value => text().unique().withDefault(const Constant('branding/color-darkbg.png'))();
+  TextColumn get value => text().unique().withDefault(const Constant('assets/branding/color-darkbg.png'))();
 }
 
 // Artists Table
@@ -101,7 +103,7 @@ MigrationStrategy get migration {
 
       // SEED THE 'UNKNOWN'
       // use OR IGNORE so it only runs the very first time the app is opened
-        await customStatement('INSERT OR IGNORE INTO covers (id, value) VALUES (1, \'branding/color-darkbg.png\')');
+        await customStatement('INSERT OR IGNORE INTO covers (id, value) VALUES (1, \'assets/branding/color-darkbg.png\')');
         await customStatement('INSERT OR IGNORE INTO artists (id, value) VALUES (1, \'Unknown Artist\')');
         await customStatement('INSERT OR IGNORE INTO genres (id, value) VALUES (1, \'Misc\')');
         await customStatement('INSERT OR IGNORE INTO albums (id, value) VALUES (1, \'Unknown Album\')');
@@ -115,8 +117,8 @@ MigrationStrategy get migration {
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
-    // This creates a local file in your project folder
-    final file = File('db.sqlite1'); 
+    final dbFolder = await getApplicationSupportDirectory();
+    final file = File(p.join(dbFolder.path, 'db.sqlite'));
     return NativeDatabase(file);
   });
 }

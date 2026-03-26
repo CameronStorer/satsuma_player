@@ -1,6 +1,6 @@
 //////////  IMPORTS /////////////////////////////////////////////////////
 import 'package:flutter/material.dart';
-import 'package:satsuma_player/app_logic/media_handler.dart';
+import 'package:satsuma_player/database/brains.dart';
 import 'package:metadata_god/metadata_god.dart';   // for finding song meta data
 
 

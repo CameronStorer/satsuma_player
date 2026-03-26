@@ -87,6 +87,24 @@ Future<List<Song>> getFavoriteSongs() {
 }
 
 ////////////////// SONG PLAYLISTS QUERIES //////////////////////////////////
+///////////// PLAYLIST MANIPULATION //////////////////////////////
+// create playlist
+void createPlaylist(String title) async {
+  await insert(db.playlists, PlaylistsCompanion(title: Value(title)));
+  print("Playlist created: $title");
+}
+// delte playlist
+void deletePlaylist(int id) async {
+  deleteById(db.playlists, id);
+  // await (db.delete(db.playlists)..where((tbl)=>tbl.title.equals(title))).go();
+  print("Playlist deleted: $id");
+}
+// add song to playlist
+void addSongToPlaylist(int playlistId, int songId) async {
+  await insert(db.playlistSongs, PlaylistSongsCompanion(playlistId: Value(playlistId), songId: Value(songId)));
+  print("Song added to playlist: $playlistId");
+
+}
 ////////////////// SONG PLAYLISTSONGS QUERIES //////////////////////////////////
 ////////////////// SONG ARTISTS QUERIES //////////////////////////////////
 ////////////////// SONG GENRES QUERIES //////////////////////////////////

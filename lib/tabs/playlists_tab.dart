@@ -98,7 +98,7 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
         // Handle the 'empty' state
         final playlistList = snapshot.data ?? [];
         if (playlistList.isEmpty) {
-          return const Center(child: Text('No Playlists found. Create one ^!'));
+          return const Center(child: Text('No Playlists found. Create one by clicking the plus button!'));
         }
 
         // the 'success' UI

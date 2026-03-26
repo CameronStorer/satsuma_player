@@ -201,7 +201,7 @@ class $CoversTable extends Covers with TableInfo<$CoversTable, Cover> {
       type: DriftSqlType.string,
       requiredDuringInsert: false,
       defaultConstraints: GeneratedColumn.constraintIsAlways('UNIQUE'),
-      defaultValue: const Constant('branding/color-darkbg.png'));
+      defaultValue: const Constant('assets/branding/color-darkbg.png'));
   @override
   List<GeneratedColumn> get $columns => [id, value];
   @override
