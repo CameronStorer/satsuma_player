@@ -6,7 +6,7 @@ Modern multi-platform media playback/downloader application built primarily in D
 To compile a Windows debug build, run command ```flutter run -d windows``` from the root directory of this repo.
 
 ### Windows Dependencies
-To build this project on a Windows machine, the user must first install Visual Studio 2026 (specifically with C++ Desktop Build Tools). Then the user must install and add the Flutter SDK to path (as environment variable) and swap to flutter channel beta before running an update command. 
+To build this project on a Windows machine, the user must first install Visual Studio 2026 (specifically with C++ Desktop Build Tools). Then the user must install and add the Flutter SDK to path (as environment variable) and run the ```flutter upgrade``` command. 
 
 Additionally, one of the utilized flutter plugins requires the installation of coding language Rust, which can be easily downloaded + installed from [https://rustup.rs](https://rustup.rs).
 
