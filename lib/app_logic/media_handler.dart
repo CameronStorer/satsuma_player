@@ -45,6 +45,9 @@ class AudioManager {
   AudioManager(){
     initialize();
     requestStoragePermission();
+    db.delete(db.songs);
+    db.delete(db.artists);
+    db.delete(db.covers);
     refreshLookUpTables();
     pruneDeletedSongs();
     scanForMedia();
@@ -66,7 +69,7 @@ class AudioManager {
   final Map<String, int> _genreCache = {};
   static Map<int, String> artistLookup = {};
   // important that this is a value notifier so that the images properly display
-  static ValueNotifier<Map<int, String>> coverLookup = ValueNotifier({});
+  static Map<int, String> coverLookup = {};
   // ensure that the AudioManager can initialize itself and keep track of music
   void initialize() {
     print("initializing");
@@ -82,40 +85,6 @@ class AudioManager {
         }
       }
     });
-  }
-  
-////////// RETRIEVE MUSIC FILE DIRECTORY //////////////////////
-  Future<Directory> getMediaDir() async {
-    Directory mediaDir;
-    if (Platform.isWindows) {
-      // Windows: put it in the user's Music folder
-      final musicDir = Directory(path.join(Platform.environment['USERPROFILE']!, 'Music', 'Satsuma Player'));
-      mediaDir = musicDir;
-    } else if (Platform.isAndroid) {
-      // Android: public Music folder
-      // Note: Starting Android 10+, you may need permissions (MANAGE_EXTERNAL_STORAGE) for true public access
-      final externalMusicDir = Directory('/storage/emulated/0/Music/Satsuma Player');
-      mediaDir = externalMusicDir;
-    } else if (Platform.isIOS) {
-      // iOS: app's Documents folder (sandboxed)
-      final documentsDir = await getApplicationDocumentsDirectory();
-      mediaDir = Directory(path.join(documentsDir.path, 'media'));
-    } else if (Platform.isLinux || Platform.isMacOS) {
-      // Other desktop OS: use home directory + Music
-      final homeDir = Directory(Platform.environment['HOME']!);
-      mediaDir = Directory(path.join(homeDir.path, 'Music', 'Satsuma Player'));
-    } else {
-      // fallback: app documents directory
-      final documentsDir = await getApplicationDocumentsDirectory();
-      mediaDir = Directory(path.join(documentsDir.path, 'media'));
-    }
-
-    // ensure the directory exists
-    if (!await mediaDir.exists()) {
-      await mediaDir.create(recursive: true);
-    }
-
-    return mediaDir;
   }
 ////////// ANDROID PERMISSION REQUEST /////////////////////////
   Future<bool> requestStoragePermission() async {
@@ -143,7 +112,8 @@ class AudioManager {
   Future<String?> saveToImageCache(Uint8List bytes, String key) async {
     try {
       // 1. Get the application-specific directory (Windows: AppData/Roaming)
-      final cacheDir = Directory('assets/covers');
+      final appDir = await getApplicationSupportDirectory();
+      final cacheDir = Directory("${appDir.path}/assets/covers");
 
       // 2. Ensure the directory exists
       if (!await cacheDir.exists()) {
@@ -219,7 +189,7 @@ class AudioManager {
     artistLookup = {for (var a in artists) a.id: a.value};
     // set cover
     final covers = await db.select(db.covers).get();
-    coverLookup.value = {for (var c in covers) c.id: c.value};
+    coverLookup = {for (var c in covers) c.id: c.value};
 
     return;
   }
@@ -279,6 +249,40 @@ class AudioManager {
       genreId: Value(genreId),
       durationMS: Value(durationMS),
     );
+  }
+  
+////////// RETRIEVE MUSIC FILE DIRECTORY //////////////////////
+  Future<Directory> getMediaDir() async {
+    Directory mediaDir;
+    if (Platform.isWindows) {
+      // Windows: put it in the user's Music folder
+      final musicDir = Directory(path.join(Platform.environment['USERPROFILE']!, 'Music', 'Satsuma Player'));
+      mediaDir = musicDir;
+    } else if (Platform.isAndroid) {
+      // Android: public Music folder
+      // Note: Starting Android 10+, you may need permissions (MANAGE_EXTERNAL_STORAGE) for true public access
+      final externalMusicDir = Directory('/storage/emulated/0/Music/Satsuma Player');
+      mediaDir = externalMusicDir;
+    } else if (Platform.isIOS) {
+      // iOS: app's Documents folder (sandboxed)
+      final documentsDir = await getApplicationDocumentsDirectory();
+      mediaDir = Directory(path.join(documentsDir.path, 'media'));
+    } else if (Platform.isLinux || Platform.isMacOS) {
+      // Other desktop OS: use home directory + Music
+      final homeDir = Directory(Platform.environment['HOME']!);
+      mediaDir = Directory(path.join(homeDir.path, 'Music', 'Satsuma Player'));
+    } else {
+      // fallback: app documents directory
+      final documentsDir = await getApplicationDocumentsDirectory();
+      mediaDir = Directory(path.join(documentsDir.path, 'media'));
+    }
+
+    // ensure the directory exists
+    if (!await mediaDir.exists()) {
+      await mediaDir.create(recursive: true);
+    }
+
+    return mediaDir;
   }
 
 /////// GET LIST OF MEDIA FILES DETECTED BY THE APP ON SCAN //////

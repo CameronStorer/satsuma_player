@@ -118,7 +118,7 @@ MigrationStrategy get migration {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationSupportDirectory();
-    final file = File(p.join(dbFolder.path, 'db.sqlite'));
+    final file = File(p.join(dbFolder.path, 'db.sqlite1'));
     return NativeDatabase(file);
   });
 }

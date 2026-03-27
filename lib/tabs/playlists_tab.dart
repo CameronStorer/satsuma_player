@@ -186,7 +186,7 @@ class _PlaylistsTabState extends State<PlaylistsTab> {
                   Expanded(
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(8.0),
-                      child: Image.asset("branding/neon.png", fit: BoxFit.cover),
+                      child: Image.asset("assets/branding/neon.png", fit: BoxFit.cover),
                     ),
                   ),
                   // 2. TITLE

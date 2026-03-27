@@ -1,4 +1,4 @@
-package com.example.satsuma_player
+package com.cameronstorer.satsuma_player
 
 import io.flutter.embedding.android.FlutterActivity
 

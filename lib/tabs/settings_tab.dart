@@ -79,7 +79,7 @@ class _SettingsTabState extends State<SettingsTab> {
                   IconButton(onPressed: (){}, icon:
                   Image.asset("assets/branding/mono-white-orangebg.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "gradient"),
                   IconButton(onPressed: (){}, icon:
-                  Image.asset("assets/branding/mobile_icon_old.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "classic"),
+                  Image.asset("assets/branding/mobile_icon.png", width: 40, height: 40, fit: BoxFit.cover),tooltip: "classic"),
                 ]),
               ],),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Change Music Scanning Directory', style: TextStyle(fontSize:16),textAlign: TextAlign.left),

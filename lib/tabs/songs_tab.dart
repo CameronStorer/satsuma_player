@@ -92,53 +92,63 @@ builder: (context, snapshot) {
     return const Center(child: Text('No songs found in your \'Music/Satsuma Player\' directory!'));
   }
   // Wrap ListView with ValueListenableBuilder
-  return ValueListenableBuilder<Map<int, String>>(
-    valueListenable: AudioManager.coverLookup,
-    builder: (context, lookup, _) {
+  // return ValueListenableBuilder<Map<int, String>>(
+    // valueListenable: AudioManager.coverLookup,
+    // builder: (context, lookup, _) {
       return ListView.builder(
         itemCount: songList.length,
         itemBuilder: (context, index) {
           final song = songList[index];
-          final path = lookup[song.coverId]; // fixed: was index[song.coverId]
+          final path = AudioManager.coverLookup[song.coverId]; // fixed: was index[song.coverId]
           return ListTile(
             leading: path != null && path.isNotEmpty
-              ? Image.file(
-                  File(path),
-                  width: 50,
-                  height: 50,
-                  fit: BoxFit.cover,
+              ? Image.file(File(path), width: 50, height: 50, fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) =>
-                    Image.asset('branding/neon.png', width: 50, height: 50),
+                    Image.asset(path, width: 50, height: 50),
                 )
-              : Image.asset('branding/neon.png', width: 50, height: 50),
+              : Image.asset('assets/branding/color-darkbg.png', width: 50, height: 50),
             title: Text(song.title),
             subtitle: Text(AudioManager.artistLookup[song.artistId] ?? 'Unknown Artist'),
             onTap: () => AudioManager.playMedia(song),
           );
-        },
-      );
-    },
-  );
-},
-            ),
-        ))));
-                // return ListView.builder(
+          //       return Row( children: [
+          // Image.asset(AudioManager.coverLookup[song.coverId] ?? 'assets/brand/color-darkbg.png',
+          // width: 50, height: 50, fit: BoxFit.cover),
+          // ListTile(
+          //   title: Text(song.title),
+          //   // subtitle: Text(song.artist ?? 'Unknown'),
+          //   subtitle: Text(AudioManager.artistLookup[song.artistId] ?? 'Unknown Artist'),
+          //   onTap: () => AudioManager.playMedia(song),
+          // )]);
+          });
+    //     ]
+    //     })););},
+    //   )))));
+    // },
+//   );
+// },
+//             // ),
+//         )))));
+//                 // return ListView.builder(
                 //   itemCount: songList.length,
                 //   itemBuilder: (context, index) {
                 //     final song = songList[index];
                 //     return 
-                //     // Row( children: [
-                //         // Image(image: AssetImage(AudioManager.coverLookup[song.coverId] ?? 'brand\\color-darkbg.png'),),
+                //     Row( children: [
+                //         Image.asset(AudioManager.coverLookup[song.coverId] ?? 'assets/brand/color-darkbg.png',
+                //         width: 50, height: 50, fit: BoxFit.cover),
                 //         ListTile(
                 //           title: Text(song.title),
                 //           // subtitle: Text(song.artist ?? 'Unknown'),
                 //           subtitle: Text(AudioManager.artistLookup[song.artistId] ?? 'Unknown Artist'),
                 //           onTap: () => AudioManager.playMedia(song),
-                //       //   )
-                //       // ]
+                //         )
+                //       ]
                 //     );
                 //   },
                 // );
              
-  }
-}
+  // }
+  // )))));
+  // }}
+  })))));}}
